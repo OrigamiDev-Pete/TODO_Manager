@@ -10,11 +10,19 @@ func _enter_tree() -> void:
 	_dockUI = DockScene.instance() as Control
 	add_control_to_bottom_panel(_dockUI, "TODO")
 	find_scripts()
+	get_editor_interface().get_resource_filesystem().connect("filesystem_changed", self, "test")
+	connect("resource_saved", self, "test2")
 
 
 func _exit_tree() -> void:
 	remove_control_from_bottom_panel(_dockUI)
 
+func test2(resource: Resource):
+	print("resource saved")
+	print(resource)
+
+func test():
+	print("filesystem changed")
 
 func find_scripts() -> Array:
 	var scripts : Array
