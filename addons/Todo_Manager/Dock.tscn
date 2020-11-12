@@ -21,13 +21,42 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Title" type="Label" parent="VBoxContainer"]
+[node name="Header" type="HBoxContainer" parent="VBoxContainer"]
 margin_right = 1024.0
-margin_bottom = 14.0
+margin_bottom = 20.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HeaderLeft" type="HBoxContainer" parent="VBoxContainer/Header"]
+margin_right = 510.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+
+[node name="Title" type="Label" parent="VBoxContainer/Header/HeaderLeft"]
+margin_top = 3.0
+margin_right = 71.0
+margin_bottom = 17.0
 text = "Todo Dock:"
+align = 1
+valign = 1
+
+[node name="HeaderRight" type="HBoxContainer" parent="VBoxContainer/Header"]
+margin_left = 514.0
+margin_right = 1024.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+alignment = 2
+
+[node name="SettingsButton" type="Button" parent="VBoxContainer/Header/HeaderRight"]
+margin_left = 447.0
+margin_right = 510.0
+margin_bottom = 20.0
+toggle_mode = true
+text = "Settings"
 
 [node name="Panel" type="Panel" parent="VBoxContainer"]
-margin_top = 18.0
+margin_top = 24.0
 margin_right = 1024.0
 margin_bottom = 600.0
 size_flags_horizontal = 3
@@ -68,7 +97,278 @@ align = 0
 [node name="Tree" type="Tree" parent="VBoxContainer/Panel"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+custom_constants/draw_guides = 1
 hide_root = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Settings" type="Panel" parent="VBoxContainer/Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/Panel/Settings"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Panel/Settings/ScrollContainer"]
+margin_right = 1024.0
+margin_bottom = 576.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/margin_right = 5
+custom_constants/margin_top = 5
+custom_constants/margin_left = 5
+custom_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 1019.0
+margin_bottom = 571.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = 14
+
+[node name="Scripts" type="HBoxContainer" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer"]
+margin_right = 1014.0
+margin_bottom = 14.0
+
+[node name="Label" type="Label" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/Scripts"]
+margin_right = 47.0
+margin_bottom = 14.0
+text = "Scripts:"
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/Scripts"]
+margin_left = 51.0
+margin_right = 1014.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer"]
+margin_top = 28.0
+margin_right = 1014.0
+margin_bottom = 76.0
+size_flags_horizontal = 5
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer"]
+margin_right = 1014.0
+margin_bottom = 48.0
+
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2"]
+margin_right = 50.0
+margin_bottom = 48.0
+rect_min_size = Vector2( 50, 0 )
+
+[node name="Scripts" type="VBoxContainer" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2"]
+margin_left = 54.0
+margin_right = 328.0
+margin_bottom = 48.0
+
+[node name="ScriptName" type="HBoxContainer" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts"]
+margin_right = 274.0
+margin_bottom = 24.0
+
+[node name="Label" type="Label" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/ScriptName"]
+margin_top = 5.0
+margin_right = 82.0
+margin_bottom = 19.0
+text = "Script Name:"
+
+[node name="CheckBox" type="CheckBox" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/ScriptName"]
+margin_left = 86.0
+margin_right = 169.0
+margin_bottom = 24.0
+text = "Full path"
+
+[node name="CheckBox2" type="CheckBox" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/ScriptName"]
+margin_left = 173.0
+margin_right = 274.0
+margin_bottom = 24.0
+text = "Short name"
+
+[node name="ScriptColour" type="HBoxContainer" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts"]
+margin_top = 28.0
+margin_right = 274.0
+margin_bottom = 48.0
+
+[node name="Label" type="Label" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/ScriptColour"]
+margin_top = 3.0
+margin_right = 85.0
+margin_bottom = 17.0
+text = "Script Colour:"
+
+[node name="ScriptColourPickerButton" type="ColorPickerButton" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/ScriptColour"]
+margin_left = 89.0
+margin_right = 189.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 100, 0 )
+color = Color( 1, 1, 1, 1 )
+
+[node name="TODOColours" type="HBoxContainer" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer"]
+margin_top = 90.0
+margin_right = 1014.0
+margin_bottom = 104.0
+
+[node name="Label" type="Label" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/TODOColours"]
+margin_right = 95.0
+margin_bottom = 14.0
+text = "TODO Colours:"
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/TODOColours"]
+margin_left = 99.0
+margin_right = 1014.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer"]
+margin_top = 118.0
+margin_right = 1014.0
+margin_bottom = 186.0
+
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3"]
+margin_right = 50.0
+margin_bottom = 68.0
+rect_min_size = Vector2( 50, 0 )
+
+[node name="Colours" type="VBoxContainer" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3"]
+margin_left = 54.0
+margin_right = 210.0
+margin_bottom = 68.0
+
+[node name="TODOColour" type="HBoxContainer" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/Colours"]
+margin_right = 156.0
+margin_bottom = 20.0
+
+[node name="Label" type="Label" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/Colours/TODOColour"]
+margin_top = 3.0
+margin_right = 52.0
+margin_bottom = 17.0
+text = "#TODO:"
+
+[node name="TODOColourPickerButton" type="ColorPickerButton" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/Colours/TODOColour"]
+margin_left = 56.0
+margin_right = 156.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 100, 0 )
+color = Color( 1, 1, 1, 1 )
+
+[node name="HACKColour" type="HBoxContainer" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/Colours"]
+margin_top = 24.0
+margin_right = 156.0
+margin_bottom = 44.0
+
+[node name="Label" type="Label" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/Colours/HACKColour"]
+margin_top = 3.0
+margin_right = 48.0
+margin_bottom = 17.0
+text = "#HACK:"
+
+[node name="HACKColourPickerButton" type="ColorPickerButton" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/Colours/HACKColour"]
+margin_left = 52.0
+margin_right = 152.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 100, 0 )
+color = Color( 0.835294, 0.737255, 0.439216, 1 )
+
+[node name="FIXMEColour" type="HBoxContainer" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/Colours"]
+margin_top = 48.0
+margin_right = 156.0
+margin_bottom = 68.0
+
+[node name="Label" type="Label" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/Colours/FIXMEColour"]
+margin_top = 3.0
+margin_right = 52.0
+margin_bottom = 17.0
+text = "#FIXME:"
+
+[node name="FIXMEColourPickerButton" type="ColorPickerButton" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/Colours/FIXMEColour"]
+margin_left = 56.0
+margin_right = 156.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 100, 0 )
+color = Color( 0.835294, 0.439216, 0.439216, 1 )
+
+[node name="TODOColours2" type="HBoxContainer" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer"]
+margin_top = 200.0
+margin_right = 1014.0
+margin_bottom = 214.0
+
+[node name="Label" type="Label" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/TODOColours2"]
+margin_right = 57.0
+margin_bottom = 14.0
+text = "Patterns:"
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/TODOColours2"]
+margin_left = 61.0
+margin_right = 1014.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer"]
+margin_top = 228.0
+margin_right = 1014.0
+margin_bottom = 304.0
+
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4"]
+margin_right = 50.0
+margin_bottom = 76.0
+rect_min_size = Vector2( 50, 0 )
+
+[node name="Patterns" type="VBoxContainer" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4"]
+margin_left = 54.0
+margin_right = 282.0
+margin_bottom = 76.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4/Patterns"]
+margin_right = 228.0
+margin_bottom = 24.0
+
+[node name="LineEdit" type="LineEdit" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4/Patterns/HBoxContainer"]
+margin_right = 200.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 200, 0 )
+size_flags_horizontal = 0
+text = "\\bTODO\\b.*"
+
+[node name="Button" type="Button" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4/Patterns/HBoxContainer"]
+margin_left = 204.0
+margin_right = 228.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+text = "-"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4/Patterns"]
+margin_top = 28.0
+margin_right = 228.0
+margin_bottom = 52.0
+
+[node name="LineEdit2" type="LineEdit" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4/Patterns/HBoxContainer2"]
+margin_right = 200.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 200, 0 )
+size_flags_horizontal = 0
+text = "\\bHACK\\b.*"
+
+[node name="Button2" type="Button" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4/Patterns/HBoxContainer2"]
+margin_left = 204.0
+margin_right = 228.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+text = "-"
+
+[node name="AddPatternButton" type="Button" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4/Patterns"]
+margin_top = 56.0
+margin_right = 37.0
+margin_bottom = 76.0
+size_flags_horizontal = 0
+text = "Add"
+[connection signal="toggled" from="VBoxContainer/Header/HeaderRight/SettingsButton" to="." method="_on_SettingsButton_toggled"]
+[connection signal="item_double_clicked" from="VBoxContainer/Panel/Tree" to="." method="_on_Tree_item_double_clicked"]
+[connection signal="color_changed" from="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/Colours/TODOColour/TODOColourPickerButton" to="." method="_on_TODOColourPickerButton_color_changed"]
