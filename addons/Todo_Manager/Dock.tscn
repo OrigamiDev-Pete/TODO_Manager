@@ -371,5 +371,5 @@ margin_bottom = 76.0
 size_flags_horizontal = 0
 text = "Add"
 [connection signal="toggled" from="VBoxContainer/Header/HeaderRight/SettingsButton" to="." method="_on_SettingsButton_toggled"]
-[connection signal="item_double_clicked" from="VBoxContainer/Panel/Tree" to="." method="_on_Tree_item_double_clicked"]
+[connection signal="item_activated" from="VBoxContainer/Panel/Tree" to="." method="_on_Tree_item_activated"]
 [connection signal="color_changed" from="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/Colours/TODOColour/TODOColourPickerButton" to="." method="_on_TODOColourPickerButton_color_changed"]

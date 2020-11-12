@@ -27,8 +27,8 @@ func build_tree() -> void:
 					leaf.set_custom_color(0, hack_color)
 
 
-func _on_Tree_item_double_clicked() -> void:
-	pass # TODO Replace with function body.
+func go_to_script(script_path: String) -> void:
+	pass
 
 
 func _on_SettingsButton_toggled(button_pressed: bool) -> void:
@@ -39,3 +39,8 @@ func _on_SettingsButton_toggled(button_pressed: bool) -> void:
 
 func _on_TODOColourPickerButton_color_changed(color: Color) -> void:
 	todo_colour = color
+
+
+func _on_Tree_item_activated() -> void:
+	# Find which item was pressed:
+	go_to_script("")
