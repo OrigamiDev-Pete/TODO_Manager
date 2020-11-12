@@ -19,7 +19,7 @@ func build_tree() -> void:
 		branch.set_text(0, todo_item.script_path)
 		for todo in todo_item.todos:
 			var leaf := tree.create_item(branch)
-			leaf.set_text(0, todo.content)
+			leaf.set_text(0, "(%0) %1".format([todo.line_number, todo.content], "%_"))
 			match todo.title:
 				"TODO":
 					leaf.set_custom_color(0, todo_colour)

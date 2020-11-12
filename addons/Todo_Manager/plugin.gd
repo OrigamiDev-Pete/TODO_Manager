@@ -37,6 +37,7 @@ func find_tokens(script_path: String) -> void:
 		todo_item.script_path = script_path
 		for r in result:
 			var new_todo : Todo = create_todo(r.get_string(), script_path)
+			new_todo.line_number = get_line_number(r.get_string(), contents)
 			todo_item.todos.append(new_todo)
 		_dockUI.todo_items.append(todo_item)
 			
@@ -44,6 +45,21 @@ func find_tokens(script_path: String) -> void:
 	# This is only a test
 	#TODO Hello.
 	# HACK : THIS IS A HACK
+
+
+func get_line_number(what: String, from: String) -> int:
+	var temp_array := from.split('\n')
+	var lines := Array(temp_array)
+	var line_number = lines.find(what) + 1
+	var i := 1
+	for line in lines:
+		if what in line:
+			line_number = i
+			break
+		i += 1
+	return line_number
+	
+
 
 func check_saved_file(script: Resource) -> void:
 	print("This resource was just saved:")
