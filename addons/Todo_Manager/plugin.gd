@@ -6,17 +6,20 @@ const Dock := preload("res://addons/Todo_Manager/Dock.gd")
 const Todo := preload("res://addons/Todo_Manager/todo_class.gd")
 
 var _dockUI : Dock
-var update_thread : Thread = Thread.new()
+#var update_thread : Thread = Thread.new()
 
 var script_cache : Array
+
+var process_timer : int
 
 func _enter_tree() -> void:
 	_dockUI = DockScene.instance() as Control
 	add_control_to_bottom_panel(_dockUI, "TODO")
 	connect("resource_saved", self, "check_saved_file")
-	var scripts := find_scripts()
-	for script in scripts:
-		find_tokens(script)
+	_dockUI.plugin = self
+	var scripts : Array = find_scripts()
+	for script_path in scripts:
+		find_tokens_from_path(script_path)
 	_dockUI.build_tree()
 
 
@@ -25,26 +28,67 @@ func _exit_tree() -> void:
 	_dockUI.queue_free()
 
 
-func find_tokens(script_path: String) -> void:
+func find_tokens_from_path(script_path: String) -> void:
 	var file := File.new()
 	file.open(script_path, File.READ)
 	var contents := file.get_as_text()
 	
-	var regex = RegEx.new()
-	if regex.compile("#\\s*\\bTODO\\b.*|#\\s*\\bHACK\\b.*") == OK:
-		var result : Array = regex.search_all(contents)
-		var todo_item = TodoItem.new()
-		todo_item.script_path = script_path
-		for r in result:
-			var new_todo : Todo = create_todo(r.get_string(), script_path)
-			new_todo.line_number = get_line_number(r.get_string(), contents)
-			todo_item.todos.append(new_todo)
-		_dockUI.todo_items.append(todo_item)
-			
+	find_tokens(contents, script_path)
+	
 	# TODO: This is a test
 	# This is only a test
 	#TODO Hello.
 	# HACK : THIS IS A HACK
+
+
+func find_tokens_from_script(script: Resource) -> void:
+	find_tokens(script.source_code, script.resource_path)
+
+
+func find_tokens(text: String, script_path: String) -> void:
+	var regex = RegEx.new()
+	if regex.compile("#\\s*\\bTODO\\b.*|#\\s*\\bHACK\\b.*") == OK:
+		var result : Array = regex.search_all(text)
+		if result.empty():
+			return # No tokens found
+		var match_found : bool
+		var i := 0
+		for todo_item in _dockUI.todo_items:
+			if todo_item.script_path == script_path:
+				match_found = true
+				var updated_todo_item := update_todo_item(todo_item, result, text, script_path)
+				_dockUI.todo_items.remove(i)
+				_dockUI.todo_items.insert(i, updated_todo_item)
+				break
+			i += 1
+		if !match_found:
+			_dockUI.todo_items.append(create_todo_item(result, text, script_path))
+#		var todo_item = TodoItem.new()
+#		todo_item.script_path = script_path
+#		for r in result:
+#			var new_todo : Todo = create_todo(r.get_string(), script_path)
+#			new_todo.line_number = get_line_number(r.get_string(), text)
+#			todo_item.todos.append(new_todo)
+#		_dockUI.todo_items.append(todo_item)
+
+
+func create_todo_item(regex_results: Array, text: String, script_path: String) -> TodoItem:
+	var todo_item = TodoItem.new()
+	todo_item.script_path = script_path
+	for r in regex_results:
+		var new_todo : Todo = create_todo(r.get_string(), script_path)
+		new_todo.line_number = get_line_number(r.get_string(), text)
+		todo_item.todos.append(new_todo)
+	return todo_item
+
+
+func update_todo_item(todo_item: TodoItem, regex_results: Array, text: String, script_path: String) -> TodoItem:
+	todo_item.todos.clear()
+	for r in regex_results:
+		var new_todo : Todo = create_todo(r.get_string(), script_path)
+		new_todo.line_number = get_line_number(r.get_string(), text)
+		todo_item.todos.append(new_todo)
+	return todo_item
 
 
 func get_line_number(what: String, from: String) -> int:
@@ -58,12 +102,12 @@ func get_line_number(what: String, from: String) -> int:
 			break
 		i += 1
 	return line_number
-	
 
 
 func check_saved_file(script: Resource) -> void:
-	print("This resource was just saved:")
-	print(script)
+	if script is Script:
+		find_tokens_from_script(script)
+	_dockUI.build_tree()
 
 
 func find_scripts() -> Array:
@@ -121,15 +165,15 @@ func create_todo(todo_string: String, script_path: String) -> Todo:
 		printerr("Error compiling TODO RegEx")
 	
 	todo.content = todo_string
+	todo.script_path = script_path
 	
-#	if regex.compile("#\\s*\\bTODO|HACK\\b\\s*:*\\s*") == OK: # Gets the Todo prefix to be removed
-#		var result = regex.search(todo_string)
-#		todo.content = todo_string.lstrip(result.get_string())
-#		print(todo_string)
-#	else:
-#		printerr("Error compiling content RegEx")
 	return todo
 
 class TodoItem:
 	var script_path : String
 	var todos : Array
+	
+	func get_short_path() -> String:
+		var temp_array := script_path.rsplit('/', false, 1)
+		var short_path := temp_array[1]
+		return short_path
