@@ -1,0 +1,22 @@
+[gd_scene format=2]
+
+[node name="Pattern" type="HBoxContainer"]
+margin_right = 228.0
+margin_bottom = 24.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LineEdit" type="LineEdit" parent="."]
+margin_right = 200.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 200, 0 )
+size_flags_horizontal = 0
+text = "\\bTODO\\b.*"
+
+[node name="RemoveButton" type="Button" parent="."]
+margin_left = 204.0
+margin_right = 228.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+text = "-"

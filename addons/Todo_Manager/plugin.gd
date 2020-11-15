@@ -21,6 +21,7 @@ func _enter_tree() -> void:
 	for script_path in scripts:
 		find_tokens_from_path(script_path)
 	_dockUI.build_tree()
+	print("here")
 
 
 func _exit_tree() -> void:
@@ -39,6 +40,9 @@ func find_tokens_from_path(script_path: String) -> void:
 	# This is only a test
 	#TODO Hello.
 	# HACK : THIS IS A HACK
+	# TODO:
+	#HACK
+	# FIXME:
 
 
 func find_tokens_from_script(script: Resource) -> void:
@@ -155,9 +159,28 @@ func get_dir_contents(dir: Directory, scripts: Array, directory_queue: Array) ->
 		file_name = dir.get_next()
 
 
+func rescan_files() -> void:
+	var scripts : Array = find_scripts()
+	for script_path in scripts:
+		find_tokens_from_path(script_path)
+	_dockUI.build_tree()
+
+
 func create_todo(todo_string: String, script_path: String) -> Todo:
 	var todo := Todo.new()
 	var regex = RegEx.new()
+#	for pattern in _dockUI.patterns:
+#		if regex.compile("\\bTODO\\b") == OK:
+#			var result : RegExMatch = regex.search(todo_string)
+#			if result:
+#				todo.pattern = pattern[0]
+#				todo.title = result.strings[0]
+#				print(todo.pattern.c_escape())
+#			else:
+#				continue
+#		else:
+#			printerr("Error compiling " + pattern[0])
+
 	if regex.compile("\\bTODO|HACK\\b") == OK: # Finds Todo token
 		var result : RegExMatch = regex.search(todo_string)
 		todo.title = result.strings[0]

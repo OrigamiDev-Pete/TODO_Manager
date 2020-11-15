@@ -1,8 +1,7 @@
 tool
 extends Reference
 
-enum {TODO, HACK}
-
+var pattern : String
 var title : String
 var content : String
 var script_path : String

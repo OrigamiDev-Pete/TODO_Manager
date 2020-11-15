@@ -1,0 +1,18 @@
+[gd_scene format=2]
+
+[node name="TODOColour" type="HBoxContainer"]
+margin_right = 156.0
+margin_bottom = 20.0
+
+[node name="Label" type="Label" parent="."]
+margin_top = 3.0
+margin_right = 52.0
+margin_bottom = 17.0
+text = "#TODO:"
+
+[node name="TODOColourPickerButton" type="ColorPickerButton" parent="."]
+margin_left = 56.0
+margin_right = 156.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 100, 0 )
+color = Color( 1, 1, 1, 1 )
