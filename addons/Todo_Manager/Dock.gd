@@ -175,7 +175,6 @@ func _on_DefaultButton_pressed() -> void:
 	script_colour = DEFAULT_SCRIPT_COLOUR
 	full_path = DEFAULT_SCRIPT_NAME
 	rebuild_settings()
-	print(DEFAULT_PATTERNS)
 
 
 func _on_AlphSortCheckBox_toggled(button_pressed: bool) -> void:
