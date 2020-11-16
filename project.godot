@@ -21,7 +21,3 @@ config/icon="res://icon.png"
 [editor_plugins]
 
 enabled=PoolStringArray( "Todo_Manager" )
-
-[rendering]
-
-environment/default_environment="res://default_env.tres"
