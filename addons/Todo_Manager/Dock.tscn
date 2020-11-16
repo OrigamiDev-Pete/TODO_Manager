@@ -1,8 +1,6 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://addons/Todo_Manager/Dock.gd" type="Script" id=1]
-[ext_resource path="res://addons/Todo_Manager/ColourPicker.tscn" type="PackedScene" id=2]
-[ext_resource path="res://addons/Todo_Manager/Pattern.tscn" type="PackedScene" id=3]
 
 [sub_resource type="ButtonGroup" id=1]
 
@@ -187,7 +185,7 @@ margin_right = 70.0
 margin_bottom = 19.0
 text = "Sort Order:"
 
-[node name="FullPathCheckBox" type="CheckBox" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/ScriptSort"]
+[node name="AlphSortCheckBox" type="CheckBox" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/ScriptSort"]
 margin_left = 74.0
 margin_right = 181.0
 margin_bottom = 24.0
@@ -195,7 +193,7 @@ pressed = true
 group = SubResource( 2 )
 text = "Alphabetical"
 
-[node name="ShortNameCheckBox" type="CheckBox" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/ScriptSort"]
+[node name="RAlphSortCheckBox" type="CheckBox" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/ScriptSort"]
 margin_left = 185.0
 margin_right = 347.0
 margin_bottom = 24.0
@@ -256,58 +254,20 @@ rect_min_size = Vector2( 50, 0 )
 
 [node name="Colours" type="VBoxContainer" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3"]
 margin_left = 54.0
-margin_right = 210.0
+margin_right = 158.0
 margin_bottom = 68.0
 
-[node name="TODOColour" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/Colours" instance=ExtResource( 2 )]
-
-[node name="HACKColour" type="HBoxContainer" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/Colours"]
-margin_top = 24.0
-margin_right = 156.0
-margin_bottom = 44.0
-
-[node name="Label" type="Label" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/Colours/HACKColour"]
-margin_top = 3.0
-margin_right = 48.0
-margin_bottom = 17.0
-text = "#HACK:"
-
-[node name="HACKColourPickerButton" type="ColorPickerButton" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/Colours/HACKColour"]
-margin_left = 52.0
-margin_right = 152.0
-margin_bottom = 20.0
-rect_min_size = Vector2( 100, 0 )
-color = Color( 0.835294, 0.737255, 0.439216, 1 )
-
-[node name="FIXMEColour" type="HBoxContainer" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/Colours"]
-margin_top = 48.0
-margin_right = 156.0
-margin_bottom = 68.0
-
-[node name="Label" type="Label" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/Colours/FIXMEColour"]
-margin_top = 3.0
-margin_right = 52.0
-margin_bottom = 17.0
-text = "#FIXME:"
-
-[node name="FIXMEColourPickerButton" type="ColorPickerButton" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/Colours/FIXMEColour"]
-margin_left = 56.0
-margin_right = 156.0
-margin_bottom = 20.0
-rect_min_size = Vector2( 100, 0 )
-color = Color( 0.835294, 0.439216, 0.439216, 1 )
-
-[node name="TODOColours2" type="HBoxContainer" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer"]
+[node name="Patterns" type="HBoxContainer" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer"]
 margin_top = 228.0
 margin_right = 1014.0
 margin_bottom = 242.0
 
-[node name="Label" type="Label" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/TODOColours2"]
+[node name="Label" type="Label" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/Patterns"]
 margin_right = 57.0
 margin_bottom = 14.0
 text = "Patterns:"
 
-[node name="HSeparator" type="HSeparator" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/TODOColours2"]
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/Patterns"]
 margin_left = 61.0
 margin_right = 1014.0
 margin_bottom = 14.0
@@ -316,32 +276,65 @@ size_flags_horizontal = 3
 [node name="HBoxContainer4" type="HBoxContainer" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer"]
 margin_top = 256.0
 margin_right = 1014.0
-margin_bottom = 332.0
+margin_bottom = 276.0
 
 [node name="VSeparator" type="VSeparator" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4"]
 margin_right = 50.0
-margin_bottom = 76.0
+margin_bottom = 20.0
 rect_min_size = Vector2( 50, 0 )
 
 [node name="Patterns" type="VBoxContainer" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4"]
 margin_left = 54.0
-margin_right = 282.0
-margin_bottom = 76.0
-
-[node name="Pattern1" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4/Patterns" instance=ExtResource( 3 )]
-
-[node name="Pattern2" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4/Patterns" instance=ExtResource( 3 )]
-margin_top = 28.0
-margin_bottom = 52.0
+margin_right = 91.0
+margin_bottom = 20.0
 
 [node name="AddPatternButton" type="Button" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4/Patterns"]
-margin_top = 56.0
 margin_right = 37.0
-margin_bottom = 76.0
+margin_bottom = 20.0
 size_flags_horizontal = 0
 text = "Add"
+
+[node name="Config" type="HBoxContainer" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer"]
+margin_top = 290.0
+margin_right = 1014.0
+margin_bottom = 304.0
+
+[node name="Label" type="Label" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/Config"]
+margin_right = 43.0
+margin_bottom = 14.0
+text = "Config:"
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/Config"]
+margin_left = 47.0
+margin_right = 1014.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer"]
+margin_top = 318.0
+margin_right = 1014.0
+margin_bottom = 338.0
+
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer5"]
+margin_right = 50.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 50, 0 )
+
+[node name="Patterns" type="VBoxContainer" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer5"]
+margin_left = 54.0
+margin_right = 167.0
+margin_bottom = 20.0
+
+[node name="DefaultButton" type="Button" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer5/Patterns"]
+margin_right = 113.0
+margin_bottom = 20.0
+size_flags_horizontal = 0
+text = "Reset to default"
 [connection signal="pressed" from="VBoxContainer/Header/HeaderRight/RescanButton" to="." method="_on_RescanButton_pressed"]
 [connection signal="toggled" from="VBoxContainer/Header/HeaderRight/SettingsButton" to="." method="_on_SettingsButton_toggled"]
 [connection signal="item_activated" from="VBoxContainer/Panel/Tree" to="." method="_on_Tree_item_activated"]
 [connection signal="toggled" from="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/ScriptName/FullPathCheckBox" to="." method="_on_FullPathCheckBox_toggled"]
+[connection signal="toggled" from="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/ScriptSort/AlphSortCheckBox" to="." method="_on_AlphSortCheckBox_toggled"]
 [connection signal="color_changed" from="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/ScriptColour/ScriptColourPickerButton" to="." method="_on_ScriptColourPickerButton_color_changed"]
+[connection signal="pressed" from="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4/Patterns/AddPatternButton" to="." method="_on_AddPatternButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer5/Patterns/DefaultButton" to="." method="_on_DefaultButton_pressed"]

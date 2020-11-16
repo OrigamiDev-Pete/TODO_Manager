@@ -1,8 +1,14 @@
-[gd_scene format=2]
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://addons/Todo_Manager/ColourPicker.gd" type="Script" id=1]
 
 [node name="TODOColour" type="HBoxContainer"]
 margin_right = 156.0
 margin_bottom = 20.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Label" type="Label" parent="."]
 margin_top = 3.0

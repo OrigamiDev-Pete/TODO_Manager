@@ -9,6 +9,8 @@ var _dockUI : Dock
 #var update_thread : Thread = Thread.new()
 
 var script_cache : Array
+var remove_queue : Array
+var combined_pattern : String
 
 var process_timer : int
 
@@ -16,12 +18,12 @@ func _enter_tree() -> void:
 	_dockUI = DockScene.instance() as Control
 	add_control_to_bottom_panel(_dockUI, "TODO")
 	connect("resource_saved", self, "check_saved_file")
+	get_editor_interface().get_resource_filesystem().connect("filesystem_changed", self, "rescan_files")
+	get_editor_interface().get_file_system_dock().connect("file_removed", self, "queue_remove")
 	_dockUI.plugin = self
-	var scripts : Array = find_scripts()
-	for script_path in scripts:
-		find_tokens_from_path(script_path)
+	combined_pattern = combine_patterns(_dockUI.patterns)
+	find_tokens_from_path(find_scripts())
 	_dockUI.build_tree()
-	print("here")
 
 
 func _exit_tree() -> void:
@@ -29,21 +31,19 @@ func _exit_tree() -> void:
 	_dockUI.queue_free()
 
 
-func find_tokens_from_path(script_path: String) -> void:
-	var file := File.new()
-	file.open(script_path, File.READ)
-	var contents := file.get_as_text()
-	
-	find_tokens(contents, script_path)
-	
-	# TODO: This is a test
-	# This is only a test
-	#TODO Hello.
-	# HACK : THIS IS A HACK
-	# TODO:
-	#HACK
-	# FIXME:
+func queue_remove(file: String):
+	for i in _dockUI.todo_items.size():
+		if _dockUI.todo_items[i].script_path == file:
+			_dockUI.todo_items.remove(i)
 
+
+func find_tokens_from_path(scripts: Array) -> void:
+	for script_path in scripts:
+		var file := File.new()
+		file.open(script_path, File.READ)
+		var contents := file.get_as_text()
+		
+		find_tokens(contents, script_path)
 
 func find_tokens_from_script(script: Resource) -> void:
 	find_tokens(script.source_code, script.resource_path)
@@ -51,9 +51,13 @@ func find_tokens_from_script(script: Resource) -> void:
 
 func find_tokens(text: String, script_path: String) -> void:
 	var regex = RegEx.new()
-	if regex.compile("#\\s*\\bTODO\\b.*|#\\s*\\bHACK\\b.*") == OK:
+#	if regex.compile("#\\s*\\bTODO\\b.*|#\\s*\\bHACK\\b.*") == OK:
+	if regex.compile(combined_pattern) == OK:
 		var result : Array = regex.search_all(text)
 		if result.empty():
+			for i in _dockUI.todo_items.size():
+				if _dockUI.todo_items[i].script_path == script_path:
+					_dockUI.todo_items.remove(i)
 			return # No tokens found
 		var match_found : bool
 		var i := 0
@@ -67,13 +71,6 @@ func find_tokens(text: String, script_path: String) -> void:
 			i += 1
 		if !match_found:
 			_dockUI.todo_items.append(create_todo_item(result, text, script_path))
-#		var todo_item = TodoItem.new()
-#		todo_item.script_path = script_path
-#		for r in result:
-#			var new_todo : Todo = create_todo(r.get_string(), script_path)
-#			new_todo.line_number = get_line_number(r.get_string(), text)
-#			todo_item.todos.append(new_todo)
-#		_dockUI.todo_items.append(todo_item)
 
 
 func create_todo_item(regex_results: Array, text: String, script_path: String) -> TodoItem:
@@ -118,22 +115,21 @@ func find_scripts() -> Array:
 	var scripts : Array
 	var directory_queue : Array
 	var dir : Directory = Directory.new()
-	print("### FIRST PHASE ###")
+	### FIRST PHASE ###
 	if dir.open("res://") == OK:
 		get_dir_contents(dir, scripts, directory_queue)
 	else:
-		print("There was an error")
-	print(directory_queue)
+		printerr("TODO_Manager: There was an error during find_scripts() ### First Phase ###")
 	
-	print("### SECOND PHASE ###")
+	### SECOND PHASE ###
 	while not directory_queue.empty():
 		if dir.change_dir(directory_queue[0]) == OK:
 			get_dir_contents(dir, scripts, directory_queue)
 		else:
-			print("There was an error at: " + directory_queue[0])
+			printerr("TODO_Manager: There was an error at: " + directory_queue[0])
 		directory_queue.pop_front()
 	
-	print(scripts)
+	cache_scripts(scripts)
 	return scripts
 
 
@@ -160,32 +156,44 @@ func get_dir_contents(dir: Directory, scripts: Array, directory_queue: Array) ->
 
 
 func rescan_files() -> void:
-	var scripts : Array = find_scripts()
-	for script_path in scripts:
-		find_tokens_from_path(script_path)
+	script_cache.clear()
+	combined_pattern = combine_patterns(_dockUI.patterns)
+	find_tokens_from_path(find_scripts())
 	_dockUI.build_tree()
+
+
+func combine_patterns(patterns: Array) -> String:
+	if patterns.size() == 1:
+		return patterns[0][0]
+	else:
+		var pattern_string : String
+		for i in range(patterns.size()):
+			if i == 0:
+				pattern_string = "#\\s*" + patterns[i][0] + ".*"
+			else:
+				pattern_string += "|" + "#\\s*" + patterns[i][0]  + ".*"
+		return pattern_string
 
 
 func create_todo(todo_string: String, script_path: String) -> Todo:
 	var todo := Todo.new()
 	var regex = RegEx.new()
-#	for pattern in _dockUI.patterns:
-#		if regex.compile("\\bTODO\\b") == OK:
-#			var result : RegExMatch = regex.search(todo_string)
-#			if result:
-#				todo.pattern = pattern[0]
-#				todo.title = result.strings[0]
-#				print(todo.pattern.c_escape())
-#			else:
-#				continue
-#		else:
-#			printerr("Error compiling " + pattern[0])
+	for pattern in _dockUI.patterns:
+		if regex.compile(pattern[0]) == OK:
+			var result : RegExMatch = regex.search(todo_string)
+			if result:
+				todo.pattern = pattern[0]
+				todo.title = result.strings[0]
+			else:
+				continue
+		else:
+			printerr("Error compiling " + pattern[0])
 
-	if regex.compile("\\bTODO|HACK\\b") == OK: # Finds Todo token
-		var result : RegExMatch = regex.search(todo_string)
-		todo.title = result.strings[0]
-	else:
-		printerr("Error compiling TODO RegEx")
+#	if regex.compile("\\bTODO|HACK\\b") == OK: # Finds Todo token
+#		var result : RegExMatch = regex.search(todo_string)
+#		todo.title = result.strings[0]
+#	else:
+#		printerr("Error compiling TODO RegEx")
 	
 	todo.content = todo_string
 	todo.script_path = script_path
