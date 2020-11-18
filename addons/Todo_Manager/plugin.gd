@@ -32,7 +32,7 @@ func _exit_tree() -> void:
 
 
 func queue_remove(file: String):
-	for i in _dockUI.todo_items.size():
+	for i in _dockUI.todo_items.size() - 1:
 		if _dockUI.todo_items[i].script_path == file:
 			_dockUI.todo_items.remove(i)
 
@@ -156,6 +156,7 @@ func get_dir_contents(dir: Directory, scripts: Array, directory_queue: Array) ->
 
 
 func rescan_files() -> void:
+	_dockUI.todo_items.clear()
 	script_cache.clear()
 	combined_pattern = combine_patterns(_dockUI.patterns)
 	find_tokens_from_path(find_scripts())
