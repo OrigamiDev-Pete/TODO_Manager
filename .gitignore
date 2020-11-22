@@ -8,3 +8,4 @@ export_presets.cfg
 # Mono-specific ignores
 .mono/
 data_*/
+addons/Todo_Manager/todo.cfg

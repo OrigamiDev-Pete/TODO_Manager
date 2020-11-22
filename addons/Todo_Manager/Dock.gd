@@ -18,6 +18,7 @@ var todo_items : Array
 var script_colour := Color("ccced3")
 var full_path := false
 var sort_alphabetical := true
+var auto_refresh := true
 
 var patterns := [["\\bTODO\\b", Color("96f1ad")], ["\\bHACK\\b", Color("d5bc70")], ["\\bFIXME\\b", Color("d57070")]]
 
@@ -114,6 +115,8 @@ func create_config_file() -> void:
 	
 	config.set_value("patterns", "patterns", patterns)
 	
+	config.set_value("config", "auto_refresh", auto_refresh)
+	
 	var err = config.save("res://addons/Todo_Manager/todo.cfg")
 
 
@@ -124,6 +127,7 @@ func load_config() -> void:
 		sort_alphabetical = config.get_value("scripts", "sort_alphabetical", DEFAULT_SORT)
 		script_colour = config.get_value("scripts", "script_colour", DEFAULT_SCRIPT_COLOUR)
 		patterns = config.get_value("patterns", "patterns", DEFAULT_PATTERNS)
+		auto_refresh = config.get_value("config", "auto_refresh", true)
 	else:
 		create_config_file()
 
@@ -134,7 +138,8 @@ func _on_SettingsButton_toggled(button_pressed: bool) -> void:
 	if button_pressed == false:
 		create_config_file()
 #		plugin.find_tokens_from_path(plugin.script_cache)
-		plugin.rescan_files()
+		if auto_refresh:
+			plugin.rescan_files()
 
 func _on_Tree_item_activated() -> void:
 	var item := tree.get_selected()
@@ -183,3 +188,12 @@ func _on_AlphSortCheckBox_toggled(button_pressed: bool) -> void:
 func _on_AddPatternButton_pressed() -> void:
 	patterns.append(["\\bplaceholder\\b", Color.white])
 	rebuild_settings()
+
+
+func _on_RefreshCheckButton_toggled(button_pressed: bool) -> void:
+	auto_refresh = button_pressed
+
+
+func _on_Timer_timeout() -> void:
+	plugin.refresh_lock = false
+	print("timer")
