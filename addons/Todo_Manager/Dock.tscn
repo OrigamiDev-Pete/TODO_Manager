@@ -81,7 +81,6 @@ __meta__ = {
 }
 
 [node name="Settings" type="Panel" parent="VBoxContainer/Panel"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 __meta__ = {
@@ -132,25 +131,25 @@ size_flags_horizontal = 3
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer"]
 margin_top = 28.0
 margin_right = 1014.0
-margin_bottom = 104.0
+margin_bottom = 132.0
 size_flags_horizontal = 5
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer"]
 margin_right = 1014.0
-margin_bottom = 76.0
+margin_bottom = 104.0
 
 [node name="VSeparator" type="VSeparator" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2"]
 margin_right = 50.0
-margin_bottom = 76.0
+margin_bottom = 104.0
 rect_min_size = Vector2( 50, 0 )
 
 [node name="Scripts" type="VBoxContainer" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2"]
 margin_left = 54.0
-margin_right = 529.0
-margin_bottom = 76.0
+margin_right = 545.0
+margin_bottom = 104.0
 
 [node name="ScriptName" type="HBoxContainer" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts"]
-margin_right = 475.0
+margin_right = 491.0
 margin_bottom = 24.0
 
 [node name="Label" type="Label" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/ScriptName"]
@@ -176,7 +175,7 @@ text = "Short name"
 
 [node name="ScriptSort" type="HBoxContainer" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts"]
 margin_top = 28.0
-margin_right = 475.0
+margin_right = 491.0
 margin_bottom = 52.0
 
 [node name="Label" type="Label" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/ScriptSort"]
@@ -210,7 +209,7 @@ text = "(Sorted by full path)"
 
 [node name="ScriptColour" type="HBoxContainer" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts"]
 margin_top = 56.0
-margin_right = 475.0
+margin_right = 491.0
 margin_bottom = 76.0
 
 [node name="Label" type="Label" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/ScriptColour"]
@@ -226,10 +225,35 @@ margin_bottom = 20.0
 rect_min_size = Vector2( 100, 0 )
 color = Color( 0.8, 0.807843, 0.827451, 1 )
 
+[node name="IgnorePaths" type="HBoxContainer" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts"]
+margin_top = 80.0
+margin_right = 491.0
+margin_bottom = 104.0
+
+[node name="Label" type="Label" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/IgnorePaths"]
+margin_top = 5.0
+margin_right = 84.0
+margin_bottom = 19.0
+text = "Ignore Paths:"
+
+[node name="TextEdit" type="LineEdit" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/IgnorePaths"]
+margin_left = 88.0
+margin_right = 338.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 250, 0 )
+
+[node name="Label3" type="Label" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/IgnorePaths"]
+margin_left = 342.0
+margin_top = 5.0
+margin_right = 491.0
+margin_bottom = 19.0
+custom_colors/font_color = Color( 0.392157, 0.392157, 0.392157, 1 )
+text = "(Separated by commas)"
+
 [node name="TODOColours" type="HBoxContainer" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer"]
-margin_top = 118.0
+margin_top = 146.0
 margin_right = 1014.0
-margin_bottom = 132.0
+margin_bottom = 160.0
 
 [node name="Label" type="Label" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/TODOColours"]
 margin_right = 95.0
@@ -243,9 +267,9 @@ margin_bottom = 14.0
 size_flags_horizontal = 3
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer"]
-margin_top = 146.0
+margin_top = 174.0
 margin_right = 1014.0
-margin_bottom = 214.0
+margin_bottom = 242.0
 
 [node name="VSeparator" type="VSeparator" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3"]
 margin_right = 50.0
@@ -258,9 +282,9 @@ margin_right = 223.0
 margin_bottom = 68.0
 
 [node name="Patterns" type="HBoxContainer" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer"]
-margin_top = 228.0
+margin_top = 256.0
 margin_right = 1014.0
-margin_bottom = 242.0
+margin_bottom = 270.0
 
 [node name="Label" type="Label" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/Patterns"]
 margin_right = 57.0
@@ -274,9 +298,9 @@ margin_bottom = 14.0
 size_flags_horizontal = 3
 
 [node name="HBoxContainer4" type="HBoxContainer" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer"]
-margin_top = 256.0
+margin_top = 284.0
 margin_right = 1014.0
-margin_bottom = 360.0
+margin_bottom = 388.0
 
 [node name="VSeparator" type="VSeparator" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4"]
 margin_right = 50.0
@@ -296,9 +320,9 @@ size_flags_horizontal = 0
 text = "Add"
 
 [node name="Config" type="HBoxContainer" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer"]
-margin_top = 374.0
+margin_top = 402.0
 margin_right = 1014.0
-margin_bottom = 388.0
+margin_bottom = 416.0
 
 [node name="Label" type="Label" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/Config"]
 margin_right = 43.0
@@ -312,9 +336,9 @@ margin_bottom = 14.0
 size_flags_horizontal = 3
 
 [node name="HBoxContainer5" type="HBoxContainer" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer"]
-margin_top = 402.0
+margin_top = 430.0
 margin_right = 1014.0
-margin_bottom = 466.0
+margin_bottom = 494.0
 
 [node name="VSeparator" type="VSeparator" parent="VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer5"]
 margin_right = 50.0
@@ -341,6 +365,7 @@ text = "Reset to default"
 
 [node name="Timer" type="Timer" parent="."]
 one_shot = true
+
 [connection signal="pressed" from="VBoxContainer/Header/HeaderRight/RescanButton" to="." method="_on_RescanButton_pressed"]
 [connection signal="toggled" from="VBoxContainer/Header/HeaderRight/SettingsButton" to="." method="_on_SettingsButton_toggled"]
 [connection signal="item_activated" from="VBoxContainer/Panel/Tree" to="." method="_on_Tree_item_activated"]
