@@ -16,7 +16,7 @@ var plugin : EditorPlugin
 var todo_items : Array
 
 var script_colour := Color("ccced3")
-var ignore_paths := [];
+var ignore_paths := []
 var full_path := false
 var sort_alphabetical := true
 var auto_refresh := true
@@ -42,13 +42,13 @@ func build_tree() -> void:
 	var root := tree.create_item()
 	root.set_text(0, "Scripts")
 	for todo_item in todo_items:
-		var ignore := false;
+		var ignore := false
 		for ignore_path in ignore_paths:
-			if todo_item.script_path.begins_with("res:///" + ignore_path):
-				ignore = true;
-				break;
+			if todo_item.script_path.begins_with("res://" + ignore_path) or todo_item.script_path.begins_with("res:///" + ignore_path):
+				ignore = true
+				break
 		if ignore: 
-			continue;
+			continue
 		var script := tree.create_item(root)
 		if full_path:
 			script.set_text(0, todo_item.script_path + " -------")
@@ -102,14 +102,14 @@ func populate_settings() -> void:
 		pattern_edit.line_edit.connect("text_changed", self, "change_pattern", [i, colour_picker])
 		pattern_edit.remove_button.connect("pressed", self, "remove_pattern", [i, pattern_edit, colour_picker])
 	$VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4/Patterns/AddPatternButton.raise()
-	var ignore_paths_field := $VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/IgnorePaths/TextEdit;
+	var ignore_paths_field := $VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/IgnorePaths/TextEdit
 	if !ignore_paths_field.is_connected("text_changed", self, "_on_ignore_paths_changed"):
-		ignore_paths_field.connect("text_changed", self, "_on_ignore_paths_changed");
-	var ignore_paths_text := "";
+		ignore_paths_field.connect("text_changed", self, "_on_ignore_paths_changed")
+	var ignore_paths_text := ""
 	for path in ignore_paths:
-		ignore_paths_text += path + ", ";
-	ignore_paths_text.rstrip(' ').rstrip(',');
-	ignore_paths_field.text = ignore_paths_text;
+		ignore_paths_text += path + ", "
+	ignore_paths_text.rstrip(' ').rstrip(',')
+	ignore_paths_field.text = ignore_paths_text
 
 func rebuild_settings() -> void:
 	for node in colours_container.get_children():
@@ -216,15 +216,16 @@ func _on_Timer_timeout() -> void:
 	print("timer")
 
 func _on_ignore_paths_changed(new_text: String) -> void:
-	var text = $VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/IgnorePaths/TextEdit.text;
-	var split: Array = text.split(',');
-	ignore_paths.clear();
+	var text = $VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/IgnorePaths/TextEdit.text
+	var split: Array = text.split(',')
+	ignore_paths.clear()
 	for elem in split:
-		if elem == " " || elem == "": continue;
-		ignore_paths.push_front(elem.lstrip(' ').rstrip(' '));
+		if elem == " " || elem == "": 
+			continue
+		ignore_paths.push_front(elem.lstrip(' ').rstrip(' '))
 	# validate so no empty string slips through (all paths ignored)
-	var i := 0;
+	var i := 0
 	for path in ignore_paths:
 		if (path == "" || path == " "):
-			ignore_paths.remove(i);
-		i += 1;
+			ignore_paths.remove(i)
+		i += 1
