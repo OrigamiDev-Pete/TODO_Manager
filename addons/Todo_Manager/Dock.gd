@@ -46,7 +46,9 @@ func build_tree() -> void:
 		for ignore_path in ignore_paths:
 			if todo_item.script_path.begins_with("res:///" + ignore_path):
 				ignore = true;
-		if ignore: continue;
+				break;
+		if ignore: 
+			continue;
 		var script := tree.create_item(root)
 		if full_path:
 			script.set_text(0, todo_item.script_path + " -------")
