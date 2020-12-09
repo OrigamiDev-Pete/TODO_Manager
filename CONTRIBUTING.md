@@ -1,6 +1,6 @@
 ## Contributing to TODO Manager
 Firstly, thank you for being interested in contributing to the Godot TODO Manager plugin!
-TODO Manager has benefitted greatly from enthusiastic users who have suggested new features, noticed bugs, and contributing code to the plugin.
+TODO Manager has benefitted greatly from enthusiastic users who have suggested new features, noticed bugs, and contributed code to the plugin.
 
 ### Code Style Guide
 For the sake of clarity, TODO Manager takes advantage of GDScripts optional static typing in most circumstances.
