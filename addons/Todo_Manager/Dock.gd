@@ -44,7 +44,8 @@ func build_tree() -> void:
 	for todo_item in todo_items:
 		var ignore := false
 		for ignore_path in ignore_paths:
-			if todo_item.script_path.begins_with("res://" + ignore_path) or todo_item.script_path.begins_with("res:///" + ignore_path):
+			var script_path : String = todo_item.script_path
+			if script_path.begins_with(ignore_path) or script_path.begins_with("res://" + ignore_path) or script_path.begins_with("res:///" + ignore_path):
 				ignore = true
 				break
 		if ignore: 
@@ -57,7 +58,11 @@ func build_tree() -> void:
 		script.set_metadata(0, todo_item)
 		for todo in todo_item.todos:
 			var item := tree.create_item(script)
-			item.set_text(0, "(%0) - %1".format([todo.line_number, todo.content], "%_"))
+			var content_header : String = todo.content
+			if "\n" in todo.content:
+				content_header = content_header.split("\n")[0] + "..."
+			item.set_text(0, "(%0) - %1".format([todo.line_number, content_header], "%_"))
+			item.set_tooltip(0, todo.content)
 			item.set_metadata(0, todo)
 			for pattern in patterns:
 				if pattern[0] == todo.pattern:
@@ -213,7 +218,7 @@ func _on_RefreshCheckButton_toggled(button_pressed: bool) -> void:
 
 func _on_Timer_timeout() -> void:
 	plugin.refresh_lock = false
-	print("timer")
+#	print("timer")
 
 func _on_ignore_paths_changed(new_text: String) -> void:
 	var text = $VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/IgnorePaths/TextEdit.text
