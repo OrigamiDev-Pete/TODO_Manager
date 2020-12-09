@@ -61,6 +61,11 @@ func build_tree() -> void:
 			var content_header : String = todo.content
 			if "\n" in todo.content:
 				content_header = content_header.split("\n")[0] + "..."
+				var sub_items : PoolStringArray = todo.content.split("\n")
+				for i in range(1, sub_items.size()):
+					var sub_item = tree.create_item(item)
+					sub_item.set_text(0, sub_items[i])
+				
 			item.set_text(0, "(%0) - %1".format([todo.line_number, content_header], "%_"))
 			item.set_tooltip(0, todo.content)
 			item.set_metadata(0, todo)
