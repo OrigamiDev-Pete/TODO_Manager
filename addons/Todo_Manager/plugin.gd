@@ -78,9 +78,23 @@ func create_todo_item(regex_results: Array, text: String, script_path: String) -
 	var todo_item = TodoItem.new()
 	todo_item.script_path = script_path
 	var last_line_number := 0
+	var lines := text.split("\n")
 	for r in regex_results:
 		var new_todo : Todo = create_todo(r.get_string(), script_path)
 		new_todo.line_number = get_line_number(r.get_string(), text, last_line_number)
+		var trailing_line := new_todo.line_number
+		var should_break = false
+		while trailing_line < lines.size() and lines[trailing_line].dedent().begins_with("#"):
+			for other_r in regex_results:
+				if lines[trailing_line] in other_r.get_string():
+					should_break = true
+					break
+			if should_break:
+				break
+			
+			new_todo.content += "\n" + lines[trailing_line]
+			trailing_line += 1
+		
 		last_line_number = new_todo.line_number
 		todo_item.todos.append(new_todo)
 	return todo_item
@@ -88,9 +102,22 @@ func create_todo_item(regex_results: Array, text: String, script_path: String) -
 
 func update_todo_item(todo_item: TodoItem, regex_results: Array, text: String, script_path: String) -> TodoItem:
 	todo_item.todos.clear()
+	var lines := text.split("\n")
 	for r in regex_results:
 		var new_todo : Todo = create_todo(r.get_string(), script_path)
 		new_todo.line_number = get_line_number(r.get_string(), text)
+		var trailing_line := new_todo.line_number
+		var should_break = false
+		while trailing_line < lines.size() and lines[trailing_line].dedent().begins_with("#"):
+			for other_r in regex_results:
+				if lines[trailing_line] in other_r.get_string():
+					should_break = true
+					break
+			if should_break:
+				break
+			
+			new_todo.content += "\n" + lines[trailing_line]
+			trailing_line += 1
 		todo_item.todos.append(new_todo)
 	return todo_item
 
@@ -107,7 +134,7 @@ func get_line_number(what: String, from: String, start := 0) -> int:
 
 
 func check_saved_file(script: Resource) -> void:
-	print(script)
+#	print(script)
 	pass
 #	if _dockUI.auto_refresh:
 #		if script is Script:
@@ -117,7 +144,7 @@ func check_saved_file(script: Resource) -> void:
 
 func _on_filesystem_changed() -> void:
 	if !refresh_lock:
-		print("here")
+#		print("here")
 		if _dockUI.auto_refresh:
 			refresh_lock = true
 			_dockUI.get_node("Timer").start()
@@ -168,7 +195,6 @@ func get_dir_contents(dir: Directory, scripts: Array, directory_queue: Array) ->
 
 
 func rescan_files() -> void:
-	print("this")
 	_dockUI.todo_items.clear()
 	script_cache.clear()
 	combined_pattern = combine_patterns(_dockUI.patterns)
