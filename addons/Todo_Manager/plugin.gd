@@ -1,9 +1,10 @@
 tool
 extends EditorPlugin
 
-const DockScene := preload("res://addons/Todo_Manager/Dock.tscn")
+const DockScene := preload("res://addons/Todo_Manager/UI/Dock.tscn")
 const Dock := preload("res://addons/Todo_Manager/Dock.gd")
 const Todo := preload("res://addons/Todo_Manager/todo_class.gd")
+const TodoItem := preload("res://addons/Todo_Manager/todoItem_class.gd")
 
 var _dockUI : Dock
 #var update_thread : Thread = Thread.new()
@@ -20,6 +21,7 @@ func _enter_tree() -> void:
 	connect("resource_saved", self, "check_saved_file")
 	get_editor_interface().get_resource_filesystem().connect("filesystem_changed", self, "_on_filesystem_changed")
 	get_editor_interface().get_file_system_dock().connect("file_removed", self, "queue_remove")
+	get_editor_interface().get_script_editor().connect("editor_script_changed", self, "_on_active_script_changed")
 	_dockUI.plugin = self
 	combined_pattern = combine_patterns(_dockUI.patterns)
 	find_tokens_from_path(find_scripts())
@@ -82,6 +84,7 @@ func create_todo_item(regex_results: Array, text: String, script_path: String) -
 	for r in regex_results:
 		var new_todo : Todo = create_todo(r.get_string(), script_path)
 		new_todo.line_number = get_line_number(r.get_string(), text, last_line_number)
+		# GD Multiline comment
 		var trailing_line := new_todo.line_number
 		var should_break = false
 		while trailing_line < lines.size() and lines[trailing_line].dedent().begins_with("#"):
@@ -106,6 +109,7 @@ func update_todo_item(todo_item: TodoItem, regex_results: Array, text: String, s
 	for r in regex_results:
 		var new_todo : Todo = create_todo(r.get_string(), script_path)
 		new_todo.line_number = get_line_number(r.get_string(), text)
+		# GD Multiline comment
 		var trailing_line := new_todo.line_number
 		var should_break = false
 		while trailing_line < lines.size() and lines[trailing_line].dedent().begins_with("#"):
@@ -123,6 +127,7 @@ func update_todo_item(todo_item: TodoItem, regex_results: Array, text: String, s
 
 
 func get_line_number(what: String, from: String, start := 0) -> int:
+	what = what.split('\n')[0] # Match first line of multiline C# comments
 	var temp_array := from.split('\n')
 	var lines := Array(temp_array)
 	var line_number# = lines.find(what) + 1
@@ -130,6 +135,8 @@ func get_line_number(what: String, from: String, start := 0) -> int:
 		if what in lines[i]:
 			line_number = i + 1 # +1 to account of 0-based array vs 1-based line numbers
 			break
+		else:
+			line_number = 0 # This is an error
 	return line_number
 
 
@@ -144,7 +151,6 @@ func check_saved_file(script: Resource) -> void:
 
 func _on_filesystem_changed() -> void:
 	if !refresh_lock:
-#		print("here")
 		if _dockUI.auto_refresh:
 			refresh_lock = true
 			_dockUI.get_node("Timer").start()
@@ -206,12 +212,20 @@ func combine_patterns(patterns: Array) -> String:
 	if patterns.size() == 1:
 		return patterns[0][0]
 	else:
-		var pattern_string : String
+#		var pattern_string : String
+		var pattern_string := "((\\/\\*)|(#|\\/\\/))\\s*("
 		for i in range(patterns.size()):
 			if i == 0:
-				pattern_string = "#\\s*" + patterns[i][0] + ".*"
+				pattern_string += patterns[i][0]
 			else:
-				pattern_string += "|" + "#\\s*" + patterns[i][0]  + ".*"
+				pattern_string += "|" + patterns[i][0]
+		pattern_string += ")(?(2)[\\s\\S]*?\\*\\/|.*)"
+#			if i == 0:
+##				pattern_string = "#\\s*" + patterns[i][0] + ".*"		
+#				pattern_string = "((\\/\\*)|(#|\\/\\/))\\s*" + patterns[i][0] + ".*" 		# (?(2)[\\s\\S]*?\\*\\/|.*)
+#			else:
+##				pattern_string += "|" + "#\\s*" + patterns[i][0]  + ".*"
+#				pattern_string += "|" + "((\\/\\*)|(#|\\/\\/))\\s*" + patterns[i][0]  + ".*"
 		return pattern_string
 
 
@@ -228,23 +242,12 @@ func create_todo(todo_string: String, script_path: String) -> Todo:
 				continue
 		else:
 			printerr("Error compiling " + pattern[0])
-
-#	if regex.compile("\\bTODO|HACK\\b") == OK: # Finds Todo token
-#		var result : RegExMatch = regex.search(todo_string)
-#		todo.title = result.strings[0]
-#	else:
-#		printerr("Error compiling TODO RegEx")
 	
 	todo.content = todo_string
 	todo.script_path = script_path
-	
 	return todo
 
-class TodoItem:
-	var script_path : String
-	var todos : Array
-	
-	func get_short_path() -> String:
-		var temp_array := script_path.rsplit('/', false, 1)
-		var short_path := temp_array[1]
-		return short_path
+
+func _on_active_script_changed(script) -> void:
+	if _dockUI.tabs.current_tab == 1:
+		_dockUI.build_tree()
