@@ -73,7 +73,6 @@ size_flags_vertical = 3
 tab_align = 0
 
 [node name="Project" type="Panel" parent="VBoxContainer/TabContainer"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
@@ -96,6 +95,7 @@ __meta__ = {
 }
 
 [node name="Current" type="Panel" parent="VBoxContainer/TabContainer"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
@@ -109,6 +109,8 @@ script = ExtResource( 3 )
 [node name="Tree" type="Tree" parent="VBoxContainer/TabContainer/Current"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+custom_constants/draw_relationship_lines = 0
+hide_folding = true
 hide_root = true
 __meta__ = {
 "_edit_use_anchors_": false
@@ -119,7 +121,7 @@ visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
-margin_top = 24.0
+margin_top = 32.0
 margin_right = -4.0
 margin_bottom = -4.0
 __meta__ = {
@@ -135,7 +137,7 @@ __meta__ = {
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/TabContainer/Settings/ScrollContainer"]
 margin_right = 1016.0
-margin_bottom = 572.0
+margin_bottom = 564.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/margin_right = 5
@@ -147,7 +149,7 @@ custom_constants/margin_bottom = 5
 margin_left = 5.0
 margin_top = 5.0
 margin_right = 1011.0
-margin_bottom = 567.0
+margin_bottom = 559.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = 14

@@ -9,3 +9,5 @@ export_presets.cfg
 .mono/
 data_*/
 addons/Todo_Manager/todo.cfg
+*.csproj
+*.sln

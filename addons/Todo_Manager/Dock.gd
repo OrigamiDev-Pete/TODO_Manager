@@ -35,6 +35,7 @@ onready var current_tree := $VBoxContainer/TabContainer/Current/Tree as Tree
 onready var settings_panel := $VBoxContainer/TabContainer/Settings as Panel
 onready var colours_container := $VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/Colours as VBoxContainer
 onready var pattern_container := $VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4/Patterns as VBoxContainer
+onready var ignore_textbox := $VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/IgnorePaths/TextEdit as LineEdit
 
 func _ready() -> void:
 	load_config()
@@ -103,7 +104,9 @@ func populate_settings() -> void:
 		pattern_edit.line_edit.connect("text_changed", self, "change_pattern", [i, colour_picker])
 		pattern_edit.remove_button.connect("pressed", self, "remove_pattern", [i, pattern_edit, colour_picker])
 	$VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4/Patterns/AddPatternButton.raise()
-	var ignore_paths_field := $VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/IgnorePaths/TextEdit
+	
+	# path filtering
+	var ignore_paths_field := ignore_textbox
 	if !ignore_paths_field.is_connected("text_changed", self, "_on_ignore_paths_changed"):
 		ignore_paths_field.connect("text_changed", self, "_on_ignore_paths_changed")
 	var ignore_paths_text := ""
@@ -217,10 +220,9 @@ func _on_RefreshCheckButton_toggled(button_pressed: bool) -> void:
 
 func _on_Timer_timeout() -> void:
 	plugin.refresh_lock = false
-#	print("timer")
 
 func _on_ignore_paths_changed(new_text: String) -> void:
-	var text = $VBoxContainer/Panel/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/IgnorePaths/TextEdit.text
+	var text = ignore_textbox.text
 	var split: Array = text.split(',')
 	ignore_paths.clear()
 	for elem in split:
