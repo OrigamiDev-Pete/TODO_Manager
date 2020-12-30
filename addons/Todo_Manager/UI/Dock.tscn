@@ -52,12 +52,6 @@ margin_bottom = 20.0
 size_flags_horizontal = 3
 alignment = 2
 
-[node name="RescanButton" type="Button" parent="VBoxContainer/Header/HeaderRight"]
-margin_left = 419.0
-margin_right = 510.0
-margin_bottom = 20.0
-text = "Rescan Files"
-
 [node name="SettingsButton" type="Button" parent="VBoxContainer/Header/HeaderRight"]
 visible = false
 margin_left = 447.0
@@ -65,6 +59,9 @@ margin_right = 510.0
 margin_bottom = 20.0
 toggle_mode = true
 text = "Settings"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="TabContainer" type="TabContainer" parent="VBoxContainer"]
 margin_right = 1024.0
@@ -406,7 +403,14 @@ text = "Reset to default"
 
 [node name="Timer" type="Timer" parent="."]
 one_shot = true
-[connection signal="pressed" from="VBoxContainer/Header/HeaderRight/RescanButton" to="." method="_on_RescanButton_pressed"]
+
+[node name="RescanButton" type="Button" parent="."]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -97.0
+margin_right = -6.0
+margin_bottom = 20.0
+text = "Rescan Files"
 [connection signal="toggled" from="VBoxContainer/Header/HeaderRight/SettingsButton" to="." method="_on_SettingsButton_toggled"]
 [connection signal="tab_changed" from="VBoxContainer/TabContainer" to="." method="_on_TabContainer_tab_changed"]
 [connection signal="item_activated" from="VBoxContainer/TabContainer/Project/Tree" to="." method="_on_Tree_item_activated"]
@@ -418,3 +422,4 @@ one_shot = true
 [connection signal="toggled" from="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer5/Patterns/RefreshCheckButton" to="." method="_on_RefreshCheckButton_toggled"]
 [connection signal="pressed" from="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer5/Patterns/DefaultButton" to="." method="_on_DefaultButton_pressed"]
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
+[connection signal="pressed" from="RescanButton" to="." method="_on_RescanButton_pressed"]
