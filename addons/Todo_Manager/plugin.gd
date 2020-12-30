@@ -1,9 +1,10 @@
 tool
 extends EditorPlugin
 
-const DockScene := preload("res://addons/Todo_Manager/Dock.tscn")
+const DockScene := preload("res://addons/Todo_Manager/UI/Dock.tscn")
 const Dock := preload("res://addons/Todo_Manager/Dock.gd")
 const Todo := preload("res://addons/Todo_Manager/todo_class.gd")
+const TodoItem := preload("res://addons/Todo_Manager/todoItem_class.gd")
 
 var _dockUI : Dock
 #var update_thread : Thread = Thread.new()
@@ -20,6 +21,7 @@ func _enter_tree() -> void:
 	connect("resource_saved", self, "check_saved_file")
 	get_editor_interface().get_resource_filesystem().connect("filesystem_changed", self, "_on_filesystem_changed")
 	get_editor_interface().get_file_system_dock().connect("file_removed", self, "queue_remove")
+	get_editor_interface().get_script_editor().connect("editor_script_changed", self, "_on_active_script_changed")
 	_dockUI.plugin = self
 	combined_pattern = combine_patterns(_dockUI.patterns)
 	find_tokens_from_path(find_scripts())
@@ -240,11 +242,7 @@ func create_todo(todo_string: String, script_path: String) -> Todo:
 	
 	return todo
 
-class TodoItem:
-	var script_path : String
-	var todos : Array
-	
-	func get_short_path() -> String:
-		var temp_array := script_path.rsplit('/', false, 1)
-		var short_path := temp_array[1]
-		return short_path
+
+func _on_active_script_changed(script) -> void:
+	if _dockUI.tabs.current_tab == 1:
+		_dockUI.build_tree()
