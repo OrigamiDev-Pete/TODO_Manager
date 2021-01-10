@@ -3,24 +3,24 @@ extends Panel
 
 signal tree_built # used for debugging
 
-const Todo := preload("res://addons/Todo_Manager/todo_class.gd")
+const Todo := preload("res://addons/Todo_Manager/Todo.gd")
 
 var sort_alphabetical := true
 
 onready var tree := $Tree as Tree
 
-func build_tree(todo_items : Array, ignore_paths : Array, patterns : Array, sort_alphabetical : bool, full_path : bool) -> void:
+func build_tree(todo_scripts : Array, ignore_paths : Array, patterns : Array, sort_alphabetical : bool, full_path : bool) -> void:
 	tree.clear()
 	if sort_alphabetical:
-		todo_items.sort_custom(self, "sort_alphabetical")
+		todo_scripts.sort_custom(self, "sort_alphabetical")
 	else:
-		todo_items.sort_custom(self, "sort_backwards")
+		todo_scripts.sort_custom(self, "sort_backwards")
 	var root := tree.create_item()
 	root.set_text(0, "Scripts")
-	for todo_item in todo_items:
+	for todo_script in todo_scripts:
 		var ignore := false
 		for ignore_path in ignore_paths:
-			var script_path : String = todo_item.script_path
+			var script_path : String = todo_script.script_path
 			if script_path.begins_with(ignore_path) or script_path.begins_with("res://" + ignore_path) or script_path.begins_with("res:///" + ignore_path):
 				ignore = true
 				break
@@ -28,11 +28,11 @@ func build_tree(todo_items : Array, ignore_paths : Array, patterns : Array, sort
 			continue
 		var script := tree.create_item(root)
 		if full_path:
-			script.set_text(0, todo_item.script_path + " -------")
+			script.set_text(0, todo_script.script_path + " -------")
 		else:
-			script.set_text(0, todo_item.get_short_path() + " -------")
-		script.set_metadata(0, todo_item)
-		for todo in todo_item.todos:
+			script.set_text(0, todo_script.get_short_path() + " -------")
+		script.set_metadata(0, todo_script)
+		for todo in todo_script.todos:
 			var item := tree.create_item(script)
 			var content_header : String = todo.content
 			if "\n" in todo.content:

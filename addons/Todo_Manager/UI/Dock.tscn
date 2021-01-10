@@ -411,6 +411,26 @@ margin_left = -97.0
 margin_right = -6.0
 margin_bottom = 20.0
 text = "Rescan Files"
+
+[node name="Button" type="Button" parent="."]
+margin_left = 579.402
+margin_right = 591.402
+margin_bottom = 20.0
+text = "Test"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+visible = false
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -262.0
+margin_top = 4.0
+margin_right = -109.0
+margin_bottom = 18.0
+value = 50.0
+percent_visible = false
 [connection signal="toggled" from="VBoxContainer/Header/HeaderRight/SettingsButton" to="." method="_on_SettingsButton_toggled"]
 [connection signal="tab_changed" from="VBoxContainer/TabContainer" to="." method="_on_TabContainer_tab_changed"]
 [connection signal="item_activated" from="VBoxContainer/TabContainer/Project/Tree" to="." method="_on_Tree_item_activated"]
@@ -423,3 +443,4 @@ text = "Rescan Files"
 [connection signal="pressed" from="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer5/Patterns/DefaultButton" to="." method="_on_DefaultButton_pressed"]
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
 [connection signal="pressed" from="RescanButton" to="." method="_on_RescanButton_pressed"]
+[connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]

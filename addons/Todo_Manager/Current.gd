@@ -3,21 +3,21 @@ extends Panel
 
 signal tree_built # used for debugging
 
-const Todo := preload("res://addons/Todo_Manager/todo_class.gd")
-const TodoItem := preload("res://addons/Todo_Manager/todoItem_class.gd")
+const Todo := preload("res://addons/Todo_Manager/Todo.gd")
+const TodoScript := preload("res://addons/Todo_Manager/TodoScript.gd")
 
 var sort_alphabetical := true
 
 onready var tree := $Tree as Tree
 
-func build_tree(todo_item : TodoItem, patterns : Array) -> void:
+func build_tree(todo_script : TodoScript, patterns : Array) -> void:
 	tree.clear()
 	var root := tree.create_item()
 	root.set_text(0, "Scripts")
 	var script := tree.create_item(root)
-	script.set_text(0, todo_item.get_short_path() + " -------")
-	script.set_metadata(0, todo_item)
-	for todo in todo_item.todos:
+	script.set_text(0, todo_script.get_short_path() + " -------")
+	script.set_metadata(0, todo_script)
+	for todo in todo_script.todos:
 		var item := tree.create_item(script)
 		var content_header : String = todo.content
 		if "\n" in todo.content:

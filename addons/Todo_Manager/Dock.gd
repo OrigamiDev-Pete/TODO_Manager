@@ -5,9 +5,10 @@ extends Control
 
 const Project := preload("res://addons/Todo_Manager/Project.gd")
 const Current := preload("res://addons/Todo_Manager/Current.gd")
+const Uid := preload("res://addons/Todo_Manager/Uid.gd")
 
-const Todo := preload("res://addons/Todo_Manager/todo_class.gd")
-const TodoItem := preload("res://addons/Todo_Manager/todoItem_class.gd")
+const Todo := preload("res://addons/Todo_Manager/Todo.gd")
+const TodoScript := preload("res://addons/Todo_Manager/TodoScript.gd")
 const ColourPicker := preload("res://addons/Todo_Manager/UI/ColourPicker.tscn")
 const Pattern := preload("res://addons/Todo_Manager/UI/Pattern.tscn")
 const DEFAULT_PATTERNS := [["\\bTODO\\b", Color("96f1ad")], ["\\bHACK\\b", Color("d5bc70")], ["\\bFIXME\\b", Color("d57070")]]
@@ -17,7 +18,7 @@ const DEFAULT_SORT := true
 
 var plugin : EditorPlugin
 
-var todo_items : Array
+var todo_scripts : Array
 
 var script_colour := Color("ccced3")
 var ignore_paths := []
@@ -36,6 +37,7 @@ onready var settings_panel := $VBoxContainer/TabContainer/Settings as Panel
 onready var colours_container := $VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/Colours as VBoxContainer
 onready var pattern_container := $VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4/Patterns as VBoxContainer
 onready var ignore_textbox := $VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/IgnorePaths/TextEdit as LineEdit
+onready var progress_bar := $ProgressBar as ProgressBar
 
 func _ready() -> void:
 	load_config()
@@ -45,7 +47,7 @@ func _ready() -> void:
 func build_tree() -> void:
 	match tabs.current_tab:
 		0:
-			project.build_tree(todo_items, ignore_paths, patterns, sort_alphabetical, full_path)
+			project.build_tree(todo_scripts, ignore_paths, patterns, sort_alphabetical, full_path)
 		1:
 			current.build_tree(get_active_script(), patterns)
 		2:
@@ -54,17 +56,17 @@ func build_tree() -> void:
 			pass
 
 
-func get_active_script() -> TodoItem:
+func get_active_script() -> TodoScript:
 	var current_script : Script = plugin.get_editor_interface().get_script_editor().get_current_script()
 	var script_path = current_script.resource_path
-	for todo_item in todo_items:
-		if todo_item.script_path == script_path:
-			return todo_item
+	for todo_script in todo_scripts:
+		if todo_script.script_path == script_path:
+			return todo_script
 	
 	# nothing found
-	var todo_item := TodoItem.new()
-	todo_item.script_path = script_path
-	return todo_item
+	var todo_script := TodoScript.new()
+	todo_script.script_path = script_path
+	return todo_script
 
 
 func go_to_script(script_path: String, line_number : int = 0) -> void:
@@ -174,8 +176,8 @@ func _on_Tree_item_activated() -> void:
 		var todo : Todo = item.get_metadata(0)
 		call_deferred("go_to_script", todo.script_path, todo.line_number)
 	else:
-		var todo_item = item.get_metadata(0)
-		call_deferred("go_to_script", todo_item.script_path)
+		var todo_script = item.get_metadata(0)
+		call_deferred("go_to_script", todo_script.script_path)
 
 func _on_FullPathCheckBox_toggled(button_pressed: bool) -> void:
 	full_path = button_pressed
@@ -239,3 +241,7 @@ func _on_ignore_paths_changed(new_text: String) -> void:
 func _on_TabContainer_tab_changed(tab: int) -> void:
 	build_tree()
 
+
+
+func _on_Button_pressed() -> void:
+	pass
