@@ -8,9 +8,14 @@
 
 config_version=4
 
-_global_script_classes=[  ]
+_global_script_classes=[ {
+"base": "Reference",
+"class": "TodoScript",
+"language": "GDScript",
+"path": "res://addons/Todo_Manager/TodoScript.gd"
+} ]
 _global_script_class_icons={
-
+"TodoScript": ""
 }
 
 [application]

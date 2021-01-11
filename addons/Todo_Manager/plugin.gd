@@ -30,10 +30,8 @@ func _enter_tree() -> void:
 	uid_generator = Uid.new()
 	script_manager = ScriptManager.new()
 	script_manager.setup(uid_generator, _dockUI.progress_bar)
-	script_manager.find_scripts()
+	_dockUI.todo_scripts = script_manager.find_scripts(_dockUI.patterns)
 	
-	combined_pattern = combine_patterns(_dockUI.patterns)
-	find_tokens_from_scripts(script_manager.scripts)
 	_dockUI.build_tree()
 
 
@@ -48,117 +46,6 @@ func queue_remove(file: String):
 			_dockUI.todo_scripts.remove(i)
 
 
-func find_tokens_from_path(scripts: Array) -> void:
-	for script_path in scripts:
-		var file := File.new()
-		file.open(script_path, File.READ)
-		var contents := file.get_as_text()
-		file.close()
-		
-		find_tokens(contents, script_path)
-
-func find_tokens_from_scripts(scripts: Array) -> void:
-	for script in scripts:
-		find_tokens(script.source_code, script.script_path)
-
-
-func find_tokens(text: String, script_path: String) -> void:
-	var regex = RegEx.new()
-#	if regex.compile("#\\s*\\bTODO\\b.*|#\\s*\\bHACK\\b.*") == OK:
-	if regex.compile(combined_pattern) == OK:
-		var result : Array = regex.search_all(text)
-		if result.empty():
-			for i in _dockUI.todo_scripts.size():
-				if _dockUI.todo_scripts[i].script_path == script_path:
-					_dockUI.todo_scripts.remove(i)
-			return # No tokens found
-		var match_found : bool
-		var i := 0
-		for todo_script in _dockUI.todo_scripts:
-			if todo_script.script_path == script_path:
-				match_found = true
-				var updated_todo_script := update_todo_script(todo_script, result, text, script_path)
-				_dockUI.todo_scripts.remove(i)
-				_dockUI.todo_scripts.insert(i, updated_todo_script)
-				break
-			i += 1
-		if !match_found:
-			_dockUI.todo_scripts.append(create_todo_script(result, text, script_path))
-
-
-func create_todo_script(regex_results: Array, text: String, script_path: String) -> TodoScript:
-	var todo_script = TodoScript.new()
-	todo_script.script_path = script_path
-	var last_line_number := 0
-	var lines := text.split("\n")
-	for r in regex_results:
-		var new_todo : Todo = create_todo(r.get_string(), script_path)
-		new_todo.line_number = get_line_number(r.get_string(), text, last_line_number)
-		# GD Multiline comment
-		var trailing_line := new_todo.line_number
-		var should_break = false
-		while trailing_line < lines.size() and lines[trailing_line].dedent().begins_with("#"):
-			for other_r in regex_results:
-				if lines[trailing_line] in other_r.get_string():
-					should_break = true
-					break
-			if should_break:
-				break
-			
-			new_todo.content += "\n" + lines[trailing_line]
-			trailing_line += 1
-		
-		last_line_number = new_todo.line_number
-		todo_script.todos.append(new_todo)
-	return todo_script
-
-
-func update_todo_script(todo_script: TodoScript, regex_results: Array, text: String, script_path: String) -> TodoScript:
-	todo_script.todos.clear()
-	var lines := text.split("\n")
-	for r in regex_results:
-		var new_todo : Todo = create_todo(r.get_string(), script_path)
-		new_todo.line_number = get_line_number(r.get_string(), text)
-		# GD Multiline comment
-		var trailing_line := new_todo.line_number
-		var should_break = false
-		while trailing_line < lines.size() and lines[trailing_line].dedent().begins_with("#"):
-			for other_r in regex_results:
-				if lines[trailing_line] in other_r.get_string():
-					should_break = true
-					break
-			if should_break:
-				break
-			
-			new_todo.content += "\n" + lines[trailing_line]
-			trailing_line += 1
-		todo_script.todos.append(new_todo)
-	return todo_script
-
-
-func get_line_number(what: String, from: String, start := 0) -> int:
-	what = what.split('\n')[0] # Match first line of multiline C# comments
-	var temp_array := from.split('\n')
-	var lines := Array(temp_array)
-	var line_number# = lines.find(what) + 1
-	for i in range(start, lines.size()):
-		if what in lines[i]:
-			line_number = i + 1 # +1 to account of 0-based array vs 1-based line numbers
-			break
-		else:
-			line_number = 0 # This is an error
-	return line_number
-
-
-func check_saved_file(script: Resource) -> void:
-#	print(script)
-	pass
-#	if _dockUI.auto_refresh:
-#		if script is Script:
-#			find_tokens_from_script(script)
-#		_dockUI.build_tree()
-
-
 func _on_filesystem_changed() -> void:
 	if !refresh_lock:
 		if _dockUI.auto_refresh:
@@ -167,52 +54,11 @@ func _on_filesystem_changed() -> void:
 			rescan_files()
 
 
-func cache_scripts(scripts: Array) -> void:
-	for script in scripts:
-		if not script_cache.has(script):
-			script_cache.append(script)
-
-
 func rescan_files() -> void:
 	_dockUI.todo_scripts.clear()
 	script_cache.clear()
-	combined_pattern = combine_patterns(_dockUI.patterns)
-	script_manager.find_scripts()
-	find_tokens_from_scripts(script_manager.scripts)
+	script_manager.find_scripts(_dockUI.patterns)
 	_dockUI.build_tree()
-
-
-func combine_patterns(patterns: Array) -> String:
-	if patterns.size() == 1:
-		return patterns[0][0]
-	else:
-		var pattern_string := "((\\/\\*)|(#|\\/\\/))\\s*("
-		for i in range(patterns.size()):
-			if i == 0:
-				pattern_string += patterns[i][0]
-			else:
-				pattern_string += "|" + patterns[i][0]
-		pattern_string += ")(?(2)[\\s\\S]*?\\*\\/|.*)"
-		return pattern_string
-
-
-func create_todo(todo_string: String, script_path: String) -> Todo:
-	var todo := Todo.new()
-	var regex = RegEx.new()
-	for pattern in _dockUI.patterns:
-		if regex.compile(pattern[0]) == OK:
-			var result : RegExMatch = regex.search(todo_string)
-			if result:
-				todo.pattern = pattern[0]
-				todo.title = result.strings[0]
-			else:
-				continue
-		else:
-			printerr("Error compiling " + pattern[0])
-	
-	todo.content = todo_string
-	todo.script_path = script_path
-	return todo
 
 
 func _on_active_script_changed(script) -> void:

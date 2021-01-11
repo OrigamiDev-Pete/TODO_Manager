@@ -407,10 +407,14 @@ one_shot = true
 [node name="RescanButton" type="Button" parent="."]
 anchor_left = 1.0
 anchor_right = 1.0
-margin_left = -97.0
-margin_right = -6.0
-margin_bottom = 20.0
+margin_left = -123.87
+margin_top = 0.471405
+margin_right = -32.8701
+margin_bottom = 20.4714
 text = "Rescan Files"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Button" type="Button" parent="."]
 margin_left = 579.402
