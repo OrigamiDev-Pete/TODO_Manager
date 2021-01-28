@@ -43,28 +43,35 @@ func _ready() -> void:
 
 
 func build_tree() -> void:
-	match tabs.current_tab:
-		0:
-			project.build_tree(todo_items, ignore_paths, patterns, sort_alphabetical, full_path)
-		1:
-			current.build_tree(get_active_script(), patterns)
-		2:
-			pass
-		_:
-			pass
+	if tabs:
+		match tabs.current_tab:
+			0:
+				project.build_tree(todo_items, ignore_paths, patterns, sort_alphabetical, full_path)
+			1:
+				current.build_tree(get_active_script(), patterns)
+			2:
+				pass
+			_:
+				pass
 
 
 func get_active_script() -> TodoItem:
 	var current_script : Script = plugin.get_editor_interface().get_script_editor().get_current_script()
-	var script_path = current_script.resource_path
-	for todo_item in todo_items:
-		if todo_item.script_path == script_path:
-			return todo_item
-	
-	# nothing found
-	var todo_item := TodoItem.new()
-	todo_item.script_path = script_path
-	return todo_item
+	if current_script:
+		var script_path = current_script.resource_path
+		for todo_item in todo_items:
+			if todo_item.script_path == script_path:
+				return todo_item
+		
+		# nothing found
+		var todo_item := TodoItem.new()
+		todo_item.script_path = script_path
+		return todo_item
+	else:
+		# not a script
+		var todo_item := TodoItem.new()
+		todo_item.script_path = "res://Documentation"
+		return todo_item
 
 
 func go_to_script(script_path: String, line_number : int = 0) -> void:

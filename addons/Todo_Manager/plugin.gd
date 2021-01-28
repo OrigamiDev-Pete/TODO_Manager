@@ -251,5 +251,6 @@ func create_todo(todo_string: String, script_path: String) -> Todo:
 
 
 func _on_active_script_changed(script) -> void:
-	if _dockUI.tabs.current_tab == 1:
-		_dockUI.build_tree()
+	if _dockUI:
+		if _dockUI.tabs.current_tab == 1:
+			_dockUI.build_tree()
