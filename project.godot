@@ -17,3 +17,7 @@ _global_script_class_icons={
 
 config/name="Todo"
 config/icon="res://icon.png"
+
+[editor_plugins]
+
+enabled=PoolStringArray( "Todo_Manager" )
