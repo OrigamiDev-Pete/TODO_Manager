@@ -29,6 +29,7 @@ func _enter_tree() -> void:
 
 
 func _exit_tree() -> void:
+	_dockUI.create_config_file()
 	remove_control_from_bottom_panel(_dockUI)
 	_dockUI.queue_free()
 

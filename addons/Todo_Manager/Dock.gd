@@ -47,8 +47,10 @@ func build_tree() -> void:
 		match tabs.current_tab:
 			0:
 				project.build_tree(todo_items, ignore_paths, patterns, sort_alphabetical, full_path)
+				create_config_file()
 			1:
 				current.build_tree(get_active_script(), patterns)
+				create_config_file()
 			2:
 				pass
 			_:
