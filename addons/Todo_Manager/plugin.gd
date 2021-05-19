@@ -7,7 +7,6 @@ const Todo := preload("res://addons/Todo_Manager/todo_class.gd")
 const TodoItem := preload("res://addons/Todo_Manager/todoItem_class.gd")
 
 var _dockUI : Dock
-#var update_thread : Thread = Thread.new()
 
 var script_cache : Array
 var remove_queue : Array
@@ -195,7 +194,7 @@ func get_dir_contents(dir: Directory, scripts: Array, directory_queue: Array) ->
 			else:
 				directory_queue.append(dir.get_current_dir() + "/" + file_name)
 		else:
-			if file_name.ends_with(".gd") or file_name.ends_with(".cs"):
+			if file_name.ends_with(".gd") or file_name.ends_with(".cs") or (file_name.ends_with(".tscn") and _dockUI.builtin_enabled):
 				if dir.get_current_dir() == "res://":
 					scripts.append(dir.get_current_dir() + file_name)
 				else:

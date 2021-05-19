@@ -24,6 +24,7 @@ var ignore_paths := []
 var full_path := false
 var sort_alphabetical := true
 var auto_refresh := true
+var builtin_enabled := false
 
 var patterns := [["\\bTODO\\b", Color("96f1ad")], ["\\bHACK\\b", Color("d5bc70")], ["\\bFIXME\\b", Color("d57070")]]
 
@@ -248,3 +249,6 @@ func _on_ignore_paths_changed(new_text: String) -> void:
 func _on_TabContainer_tab_changed(tab: int) -> void:
 	build_tree()
 
+func _on_BuiltInCheckButton_toggled(button_pressed: bool) -> void:
+	builtin_enabled = button_pressed
+	plugin.rescan_files()
