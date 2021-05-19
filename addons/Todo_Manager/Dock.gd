@@ -147,6 +147,7 @@ func create_config_file() -> void:
 	config.set_value("patterns", "patterns", patterns)
 	
 	config.set_value("config", "auto_refresh", auto_refresh)
+	config.set_value("config", "builtin_enabled", builtin_enabled)
 	
 	var err = config.save("res://addons/Todo_Manager/todo.cfg")
 
@@ -160,6 +161,7 @@ func load_config() -> void:
 		ignore_paths = config.get_value("scripts", "ignore_paths", [])
 		patterns = config.get_value("patterns", "patterns", DEFAULT_PATTERNS)
 		auto_refresh = config.get_value("config", "auto_refresh", true)
+		builtin_enabled = config.get_value("config", "builtin_enabled", false)
 	else:
 		create_config_file()
 
