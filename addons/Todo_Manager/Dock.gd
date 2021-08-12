@@ -78,10 +78,33 @@ func get_active_script() -> TodoItem:
 
 
 func go_to_script(script_path: String, line_number : int = 0) -> void:
-	var script := load(script_path)
-	plugin.get_editor_interface().edit_resource(script)
-	plugin.get_editor_interface().get_script_editor().goto_line(line_number - 1)
+	if plugin.get_editor_interface().get_editor_settings().get_setting("text_editor/external/use_external_editor"):
+		var exec_path = plugin.get_editor_interface().get_editor_settings().get_setting("text_editor/external/exec_path")
+		var args := get_exec_flags(exec_path, script_path, line_number)
+		OS.execute(exec_path, args)
+	else:
+		var script := load(script_path)
+		plugin.get_editor_interface().edit_resource(script)
+		plugin.get_editor_interface().get_script_editor().goto_line(line_number - 1)
 
+func get_exec_flags(editor_path : String, script_path : String, line_number : int) -> PoolStringArray:
+	var args : PoolStringArray
+	var script_global_path = ProjectSettings.globalize_path(script_path)
+	
+	if editor_path.ends_with("code.cmd"): ## VS Code
+		args.append(ProjectSettings.globalize_path("res://"))
+		args.append("--goto")
+		args.append(script_global_path +  ":" + String(line_number))
+	
+	elif editor_path.ends_with("rider64.exe"): ## Rider
+		args.append("--line")
+		args.append(String(line_number))
+		args.append(script_global_path)
+		
+	else: ## Atom / Sublime
+		args.append(script_global_path + ":" + String(line_number))
+	
+	return args
 
 func sort_alphabetical(a, b) -> bool:
 	if a.script_path > b.script_path:
