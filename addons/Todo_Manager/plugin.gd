@@ -194,7 +194,9 @@ func get_dir_contents(dir: Directory, scripts: Array, directory_queue: Array) ->
 			else:
 				directory_queue.append(dir.get_current_dir() + "/" + file_name)
 		else:
-			if file_name.ends_with(".gd") or file_name.ends_with(".cs") or (file_name.ends_with(".tscn") and _dockUI.builtin_enabled):
+			if file_name.ends_with(".gd") or file_name.ends_with(".cs") \
+			or file_name.ends_with(".c") or file_name.ends_with(".cpp") or file_name.ends_with(".h") \
+			or ((file_name.ends_with(".tscn") and _dockUI.builtin_enabled)):
 				if dir.get_current_dir() == "res://":
 					scripts.append(dir.get_current_dir() + file_name)
 				else:
