@@ -3,10 +3,10 @@
  ![example_image](https://github.com/OrigamiDev-Pete/TODO_Manager/blob/main/addons/Todo_Manager/doc/images/example1.png)
  
 ## Simple and flexible
-- Supports GDScript and C#
+- Supports GDScript, C# and GDNative
 - Seamlessly integrated into the Godot dock
 - Lenient syntax. Write TODOs that suit your style
-- Quickly jump to lines
+- Quickly jump to lines and launch external editors
 
 ## Customizable
 ![settings_example](https://github.com/OrigamiDev-Pete/TODO_Manager/blob/main/addons/Todo_Manager/doc/images/example2.png)
