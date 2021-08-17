@@ -91,9 +91,10 @@ func get_exec_flags(editor_path : String, script_path : String, line_number : in
 	var args : PoolStringArray
 	var script_global_path = ProjectSettings.globalize_path(script_path)
 
-	var regex = RegEx.new()
+	var regex : RegEx = RegEx.new()
+	# warning-ignore:return_value_discarded
 	regex.compile("code\\.cmd|code|rider64.exe")	
-	var result = regex.search(editor_path)
+	var result : RegExMatch = regex.search(editor_path)
 
 	if result:
 
