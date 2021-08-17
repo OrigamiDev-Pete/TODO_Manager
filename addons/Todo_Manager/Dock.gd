@@ -90,20 +90,25 @@ func go_to_script(script_path: String, line_number : int = 0) -> void:
 func get_exec_flags(editor_path : String, script_path : String, line_number : int) -> PoolStringArray:
 	var args : PoolStringArray
 	var script_global_path = ProjectSettings.globalize_path(script_path)
-	
-	if editor_path.ends_with("code.cmd"): ## VS Code
-		args.append(ProjectSettings.globalize_path("res://"))
-		args.append("--goto")
-		args.append(script_global_path +  ":" + String(line_number))
-	
-	elif editor_path.ends_with("rider64.exe"): ## Rider
-		args.append("--line")
-		args.append(String(line_number))
-		args.append(script_global_path)
-		
+
+	var regex = RegEx.new()
+	regex.compile("code\\.cmd|code|rider64.exe")	
+	var result = regex.search(editor_path)
+
+	if result:
+
+		match(result.get_string()):
+			"code", "code.cmd":
+				args.append(ProjectSettings.globalize_path("res://"))
+				args.append("--goto")
+				args.append(script_global_path +  ":" + String(line_number))
+			"rider64.exe":
+				args.append("--line")
+				args.append(String(line_number))
+				args.append(script_global_path)
+
 	else: ## Atom / Sublime
 		args.append(script_global_path + ":" + String(line_number))
-	
 	return args
 
 func sort_alphabetical(a, b) -> bool:
