@@ -91,12 +91,12 @@ func get_exec_flags(editor_path : String, script_path : String, line_number : in
 	var args : PoolStringArray
 	var script_global_path = ProjectSettings.globalize_path(script_path)
 	
-	if editor_path.ends_with("code.cmd"): ## VS Code
+	if editor_path.ends_with("code.cmd") or editor_path.ends_with("code"): ## VS Code
 		args.append(ProjectSettings.globalize_path("res://"))
 		args.append("--goto")
 		args.append(script_global_path +  ":" + String(line_number))
 	
-	elif editor_path.ends_with("rider64.exe"): ## Rider
+	elif editor_path.ends_with("rider64.exe") or editor_path.ends_with("rider"): ## Rider
 		args.append("--line")
 		args.append(String(line_number))
 		args.append(script_global_path)
