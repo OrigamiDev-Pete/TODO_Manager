@@ -426,10 +426,11 @@ one_shot = true
 [node name="RescanButton" type="Button" parent="."]
 anchor_left = 1.0
 anchor_right = 1.0
-margin_left = -97.0
 margin_right = -6.0
 margin_bottom = 20.0
+grow_horizontal = 0
 text = "Rescan Files"
+
 [connection signal="toggled" from="VBoxContainer/Header/HeaderRight/SettingsButton" to="." method="_on_SettingsButton_toggled"]
 [connection signal="tab_changed" from="VBoxContainer/TabContainer" to="." method="_on_TabContainer_tab_changed"]
 [connection signal="item_activated" from="VBoxContainer/TabContainer/Project/Tree" to="." method="_on_Tree_item_activated"]
