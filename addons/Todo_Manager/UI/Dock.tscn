@@ -70,7 +70,6 @@ size_flags_vertical = 3
 tab_align = 0
 
 [node name="Project" type="Panel" parent="VBoxContainer/TabContainer"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
@@ -115,6 +114,7 @@ __meta__ = {
 }
 
 [node name="Settings" type="Panel" parent="VBoxContainer/TabContainer"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
@@ -236,14 +236,6 @@ margin_right = 347.0
 margin_bottom = 24.0
 group = SubResource( 2 )
 text = "Reverse Alphabetical"
-
-[node name="Label2" type="Label" parent="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/ScriptSort"]
-margin_left = 351.0
-margin_top = 5.0
-margin_right = 475.0
-margin_bottom = 19.0
-custom_colors/font_color = Color( 0.392157, 0.392157, 0.392157, 1 )
-text = "(Sorted by full path)"
 
 [node name="ScriptColour" type="HBoxContainer" parent="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts"]
 margin_top = 56.0

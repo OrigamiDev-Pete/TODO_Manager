@@ -10,7 +10,6 @@ config_version=4
 
 _global_script_classes=[  ]
 _global_script_class_icons={
-
 }
 
 [application]
@@ -20,4 +19,4 @@ config/icon="res://icon.png"
 
 [editor_plugins]
 
-enabled=PoolStringArray( "Todo_Manager" )
+enabled=PoolStringArray( "res://addons/Todo_Manager/plugin.cfg" )

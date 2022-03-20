@@ -5,11 +5,13 @@ signal tree_built # used for debugging
 
 const Todo := preload("res://addons/Todo_Manager/todo_class.gd")
 
-var sort_alphabetical := true
+var _sort_alphabetical := true
+var _full_path := false
 
 onready var tree := $Tree as Tree
 
 func build_tree(todo_items : Array, ignore_paths : Array, patterns : Array, sort_alphabetical : bool, full_path : bool) -> void:
+	_full_path = full_path
 	tree.clear()
 	if sort_alphabetical:
 		todo_items.sort_custom(self, "sort_alphabetical")
@@ -47,13 +49,25 @@ func build_tree(todo_items : Array, ignore_paths : Array, patterns : Array, sort
 
 
 func sort_alphabetical(a, b) -> bool:
-	if a.script_path > b.script_path:
-		return true
+	if _full_path:
+		if a.script_path < b.script_path:
+			return true
+		else:
+			return false
 	else:
-		return false
+		if a.get_short_path() < b.get_short_path():
+			return true
+		else:
+			return false
 
 func sort_backwards(a, b) -> bool:
-	if a.script_path < b.script_path:
-		return true
+	if _full_path:
+		if a.script_path > b.script_path:
+			return true
+		else:
+			return false
 	else:
-		return false
+		if a.get_short_path() > b.get_short_path():
+			return true
+		else:
+			return false
