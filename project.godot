@@ -16,4 +16,4 @@ config/features=PackedStringArray("4.0")
 
 [editor_plugins]
 
-enabled=PackedStringArray()
+enabled=PackedStringArray("res://addons/Todo_Manager/plugin.cfg")

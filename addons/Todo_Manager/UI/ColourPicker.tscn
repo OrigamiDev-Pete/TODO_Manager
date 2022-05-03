@@ -3,7 +3,10 @@
 [ext_resource type="Script" path="res://addons/Todo_Manager/ColourPicker.gd" id="1"]
 
 [node name="TODOColour" type="HBoxContainer"]
+offset_right = 105.0
+offset_bottom = 31.0
 script = ExtResource( "1" )
+metadata/_edit_use_custom_anchors = false
 
 [node name="Label" type="Label" parent="."]
 offset_top = 4.0
@@ -11,6 +14,8 @@ offset_right = 1.0
 offset_bottom = 27.0
 
 [node name="TODOColourPickerButton" type="ColorPickerButton" parent="."]
+minimum_size = Vector2(100, 20)
 offset_left = 5.0
-offset_right = 13.0
+offset_right = 105.0
 offset_bottom = 31.0
+size_flags_horizontal = 10
