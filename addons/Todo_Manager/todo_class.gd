@@ -1,5 +1,6 @@
-tool
-extends Reference
+@tool
+extends RefCounted
+
 
 var pattern : String
 var title : String

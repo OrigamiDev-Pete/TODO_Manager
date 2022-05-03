@@ -1,12 +1,16 @@
-tool
+@tool
 extends HBoxContainer
 
-var text : String setget set_text
+
+var text : String:
+	set = set_text
 var disabled : bool
 var index : int
 
-onready var line_edit := $LineEdit as LineEdit
-onready var remove_button := $RemoveButton as Button
+
+@onready var line_edit := $LineEdit as LineEdit
+@onready var remove_button := $RemoveButton as Button
+
 
 func _ready() -> void:
 	line_edit.text = text
