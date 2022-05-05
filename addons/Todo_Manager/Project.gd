@@ -1,4 +1,4 @@
-tool
+@tool
 extends Panel
 
 signal tree_built # used for debugging
@@ -8,15 +8,15 @@ const Todo := preload("res://addons/Todo_Manager/todo_class.gd")
 var _sort_alphabetical := true
 var _full_path := false
 
-onready var tree := $Tree as Tree
+@onready var tree := $Tree as Tree
 
 func build_tree(todo_items : Array, ignore_paths : Array, patterns : Array, sort_alphabetical : bool, full_path : bool) -> void:
 	_full_path = full_path
 	tree.clear()
 	if sort_alphabetical:
-		todo_items.sort_custom(self, "sort_alphabetical")
+		todo_items.sort_custom(Callable(self, "sort_alphabetical"))
 	else:
-		todo_items.sort_custom(self, "sort_backwards")
+		todo_items.sort_custom(Callable(self, "sort_backwards"))
 	var root := tree.create_item()
 	root.set_text(0, "Scripts")
 	for todo_item in todo_items:

@@ -1,4 +1,4 @@
-tool
+@tool
 extends EditorPlugin
 
 const DockScene := preload("res://addons/Todo_Manager/UI/Dock.tscn")
@@ -14,13 +14,16 @@ var combined_pattern : String
 
 var refresh_lock := false # makes sure _on_filesystem_changed only triggers once
 
+
 func _enter_tree() -> void:
-	_dockUI = DockScene.instance() as Control
+	_dockUI = DockScene.instantiate() as Control
 	add_control_to_bottom_panel(_dockUI, "TODO")
-	connect("resource_saved", self, "check_saved_file")
-	get_editor_interface().get_resource_filesystem().connect("filesystem_changed", self, "_on_filesystem_changed")
-	get_editor_interface().get_file_system_dock().connect("file_removed", self, "queue_remove")
-	get_editor_interface().get_script_editor().connect("editor_script_changed", self, "_on_active_script_changed")
+	resource_saved.connect(check_saved_file)
+	get_editor_interface().get_resource_filesystem().connect("filesystem_changed", 
+			_on_filesystem_changed)
+	get_editor_interface().get_file_system_dock().connect("file_removed", queue_remove)
+	get_editor_interface().get_script_editor().connect("editor_script_changed",
+			_on_active_script_changed)
 	_dockUI.plugin = self
 	combined_pattern = combine_patterns(_dockUI.patterns)
 	find_tokens_from_path(find_scripts())
@@ -36,7 +39,7 @@ func _exit_tree() -> void:
 func queue_remove(file: String):
 	for i in _dockUI.todo_items.size() - 1:
 		if _dockUI.todo_items[i].script_path == file:
-			_dockUI.todo_items.remove(i)
+			_dockUI.todo_items.remove_at(i)
 
 
 func find_tokens_from_path(scripts: Array) -> void:
@@ -56,10 +59,10 @@ func find_tokens(text: String, script_path: String) -> void:
 #	if regex.compile("#\\s*\\bTODO\\b.*|#\\s*\\bHACK\\b.*") == OK:
 	if regex.compile(combined_pattern) == OK:
 		var result : Array = regex.search_all(text)
-		if result.empty():
+		if result.is_empty():
 			for i in _dockUI.todo_items.size():
 				if _dockUI.todo_items[i].script_path == script_path:
-					_dockUI.todo_items.remove(i)
+					_dockUI.todo_items.remove_at(i)
 			return # No tokens found
 		var match_found : bool
 		var i := 0
@@ -67,7 +70,7 @@ func find_tokens(text: String, script_path: String) -> void:
 			if todo_item.script_path == script_path:
 				match_found = true
 				var updated_todo_item := update_todo_item(todo_item, result, text, script_path)
-				_dockUI.todo_items.remove(i)
+				_dockUI.todo_items.remove_at(i)
 				_dockUI.todo_items.insert(i, updated_todo_item)
 				break
 			i += 1
@@ -155,6 +158,7 @@ func _on_filesystem_changed() -> void:
 			_dockUI.get_node("Timer").start()
 			rescan_files()
 
+
 func find_scripts() -> Array:
 	var scripts : Array
 	var directory_queue : Array
@@ -166,7 +170,7 @@ func find_scripts() -> Array:
 		printerr("TODO_Manager: There was an error during find_scripts() ### First Phase ###")
 	
 	### SECOND PHASE ###
-	while not directory_queue.empty():
+	while not directory_queue.is_empty():
 		if dir.change_dir(directory_queue[0]) == OK:
 			get_dir_contents(dir, scripts, directory_queue)
 		else:
@@ -184,12 +188,14 @@ func cache_scripts(scripts: Array) -> void:
 
 
 func get_dir_contents(dir: Directory, scripts: Array, directory_queue: Array) -> void:
-	dir.list_dir_begin(true, true)
+	dir.include_navigational = false
+	dir.include_hidden = false
+	dir.list_dir_begin()
 	var file_name : String = dir.get_next()
 	
 	while file_name != "":
 		if dir.current_is_dir():
-			if file_name == ".import" or filename == ".mono": # Skip .import folder which should never have scripts
+			if file_name == ".import" or file_name == ".mono": # Skip .import folder which should never have scripts
 				pass
 			else:
 				directory_queue.append(dir.get_current_dir() + "/" + file_name)
