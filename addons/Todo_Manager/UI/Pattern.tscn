@@ -3,17 +3,16 @@
 [ext_resource type="Script" path="res://addons/Todo_Manager/Pattern.gd" id="1"]
 
 [node name="Pattern" type="HBoxContainer"]
-script = ExtResource( "1" )
+script = ExtResource("1")
 
 [node name="LineEdit" type="LineEdit" parent="."]
-minimum_size = Vector2(200, 0)
-offset_right = 200.0
+offset_right = 67.0625
 offset_bottom = 31.0
 size_flags_horizontal = 0
+expand_to_text_length = true
 
 [node name="RemoveButton" type="Button" parent="."]
-minimum_size = Vector2(24, 24)
-offset_left = 204.0
-offset_right = 228.0
+offset_left = 71.0
+offset_right = 85.0
 offset_bottom = 31.0
 text = "-"
