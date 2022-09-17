@@ -23,7 +23,7 @@ func build_tree(todo_item : TodoItem, patterns : Array) -> void:
 		if "\n" in todo.content:
 			content_header = content_header.split("\n")[0] + "..."
 		item.set_text(0, "(%0) - %1".format([todo.line_number, content_header], "%_"))
-		item.set_tooltip(0, todo.content)
+		item.set_tooltip_text(0, todo.content)
 		item.set_metadata(0, todo)
 		for pattern in patterns:
 			if pattern[0] == todo.pattern:
