@@ -1,4 +1,4 @@
-tool
+@tool
 extends Panel
 
 signal tree_built # used for debugging
@@ -6,9 +6,9 @@ signal tree_built # used for debugging
 const Todo := preload("res://addons/Todo_Manager/todo_class.gd")
 const TodoItem := preload("res://addons/Todo_Manager/todoItem_class.gd")
 
-var sort_alphabetical := true
+var _sort_alphabetical := true
 
-onready var tree := $Tree as Tree
+@onready var tree := $Tree as Tree
 
 func build_tree(todo_item : TodoItem, patterns : Array) -> void:
 	tree.clear()
@@ -23,7 +23,7 @@ func build_tree(todo_item : TodoItem, patterns : Array) -> void:
 		if "\n" in todo.content:
 			content_header = content_header.split("\n")[0] + "..."
 		item.set_text(0, "(%0) - %1".format([todo.line_number, content_header], "%_"))
-		item.set_tooltip(0, todo.content)
+		item.set_tooltip_text(0, todo.content)
 		item.set_metadata(0, todo)
 		for pattern in patterns:
 			if pattern[0] == todo.pattern:
@@ -42,4 +42,3 @@ func sort_backwards(a, b) -> bool:
 		return true
 	else:
 		return false
-
