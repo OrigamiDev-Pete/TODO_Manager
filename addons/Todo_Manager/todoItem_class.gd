@@ -1,7 +1,6 @@
 @tool
 extends RefCounted
 
-
 var script_path : String
 var todos : Array
 

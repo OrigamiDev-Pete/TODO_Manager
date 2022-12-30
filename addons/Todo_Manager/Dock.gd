@@ -68,13 +68,11 @@ func get_active_script() -> TodoItem:
 				return todo_item
 		
 		# nothing found
-		var todo_item := TodoItem.new()
-		todo_item.script_path = script_path
+		var todo_item := TodoItem.new(script_path, [])
 		return todo_item
 	else:
 		# not a script
-		var todo_item := TodoItem.new()
-		todo_item.script_path = "res://Documentation"
+		var todo_item := TodoItem.new("res://Documentation", [])
 		return todo_item
 
 
