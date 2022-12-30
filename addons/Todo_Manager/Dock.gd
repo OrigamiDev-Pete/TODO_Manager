@@ -67,13 +67,11 @@ func get_active_script() -> TodoItem:
 				return todo_item
 		
 		# nothing found
-		var todo_item := TodoItem.new()
-		todo_item.script_path = script_path
+		var todo_item := TodoItem.new(script_path, [])
 		return todo_item
 	else:
 		# not a script
-		var todo_item := TodoItem.new()
-		todo_item.script_path = "res://Documentation"
+		var todo_item := TodoItem.new("res://Documentation", [])
 		return todo_item
 
 
@@ -196,7 +194,7 @@ func _on_SettingsButton_toggled(button_pressed: bool) -> void:
 		create_config_file()
 #		plugin.find_tokens_from_path(plugin.script_cache)
 		if auto_refresh:
-			plugin.rescan_files()
+			plugin.rescan_files(true)
 
 func _on_Tree_item_activated() -> void:
 	var item : TreeItem
@@ -222,7 +220,7 @@ func _on_TODOColourPickerButton_color_changed(color: Color) -> void:
 	patterns[0][1] = color
 
 func _on_RescanButton_pressed() -> void:
-	plugin.rescan_files()
+	plugin.rescan_files(true)
 
 func change_colour(colour: Color, index: int) -> void:
 	patterns[index][1] = colour
@@ -276,4 +274,4 @@ func _on_TabContainer_tab_changed(tab: int) -> void:
 
 func _on_BuiltInCheckButton_toggled(button_pressed: bool) -> void:
 	builtin_enabled = button_pressed
-	plugin.rescan_files()
+	plugin.rescan_files(true)

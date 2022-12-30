@@ -4,6 +4,11 @@ extends Reference
 var script_path : String
 var todos : Array
 
+func _init(script_path: String, todos: Array) -> void:
+	self.script_path = script_path
+	self.todos = todos
+
+
 func get_short_path() -> String:
 	var temp_array := script_path.rsplit('/', false, 1)
 	var short_path : String
