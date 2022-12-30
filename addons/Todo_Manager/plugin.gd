@@ -61,7 +61,7 @@ func find_tokens_from_script(script: Resource) -> void:
 
 
 func find_tokens(text: String, script_path: String) -> void:
-	var cached_todos = get_caches_todos(script_path)
+	var cached_todos = get_cached_todos(script_path)
 	if cached_todos.size() != 0:
 #		var i := 0
 #		for todo_item in _dockUI.todo_items:
@@ -193,7 +193,7 @@ func cache_todos(todos: Array, script_path: String) -> void:
 	todo_cache[script_path] = TodoCacheValue.new(todos, last_modified_time)
 
 
-func get_caches_todos(script_path: String) -> Array:
+func get_cached_todos(script_path: String) -> Array:
 	if todo_cache.has(script_path):
 		var cached_value: TodoCacheValue = todo_cache[script_path]
 		if cached_value.last_modified_time == FileAccess.get_modified_time(script_path):
