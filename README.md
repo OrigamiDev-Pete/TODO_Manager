@@ -1,42 +1,56 @@
 # TODO Manager
- 
+
  ![example_image](https://github.com/OrigamiDev-Pete/TODO_Manager/blob/main/addons/Todo_Manager/doc/images/example1.png)
- 
-## Simple and flexible
-- Supports GDScript, C# and GDNative
-- Seamlessly integrated into the Godot dock
-- Lenient syntax. Write TODOs that suit your style
-- Quickly jump to lines and launch external editors
 
-## Customizable
+## 简单而灵活
+
+- 支持 GDScript，C# 和 GDNative。
+- 无缝集成到 Godot dock 栏。
+- 宽松的语法，用适合你自己的风格写TODOs。
+- 快速跳转到某一行并启用外部编辑器。
+
+## 可定制
+
 ![settings_example](https://github.com/OrigamiDev-Pete/TODO_Manager/blob/main/addons/Todo_Manager/doc/images/example2.png)
-- Add your own RegEx patterns
-- Set colours to your liking
 
-## Installation
-### Method 1 (Godot Asset Library)
-The most simple way to get started using TODO Manager is to use Godot's inbuilt Asset Library to install the plugin into your project.
-#### Step 1
-Find TODO Manager in the Godot Asset Library.
+- 添加你自己的正则表达式。
+- 设置你喜欢的颜色。
+
+## 安装
+
+### 方法一 (Godot Asset Library)
+
+最简单的使用 TODO Manager 的方法，使用 Godot 内置的资源商店（Asset Library）来安装这个插件到你的项目。
+
+#### 第一步
+
+在资源商店搜索 TODO Manager。
 ![AssetLib image](https://github.com/OrigamiDev-Pete/TODO_Manager/blob/main/addons/Todo_Manager/doc/images/Instruct1.png)
 
-#### Step 2
-Install the package. You may want to untick the /doc folder at this point as it is not necessary for the functions of the plugin.
+#### 第二步
+
+安装下载的插件，你可能需要取消勾选 /doc 文件夹，因为插件的功能不需要。
 ![Filestrcture image](https://github.com/OrigamiDev-Pete/TODO_Manager/blob/main/addons/Todo_Manager/doc/images/Instruct3.png)
 
-#### Step 4
-Enable the plugin in the project settings.
+#### 第三步
+
+在项目设置里启用插件。
 ![Project image](https://github.com/OrigamiDev-Pete/TODO_Manager/blob/main/addons/Todo_Manager/doc/images/Instruct4.png)
 
-### Method 2 (GitHub)
-#### Step 1
-Click Download ZIP from the 'Code' dropdown.
+### 方法二 (GitHub)
+
+#### 第一步
+
+点击 Download ZIP。
 ![GitHub image](https://github.com/OrigamiDev-Pete/TODO_Manager/blob/main/addons/Todo_Manager/doc/images/Instruct5.png)
 
-#### Step 2
-- Unzip the file and add it into your project folder. Make sure 'addons' is a subdirectory of res://
-- DO NOT change the name of the 'addons' or 'Todo_Manager' folders as this will break the saving and loading of your settings.
+#### 第二步
 
-#### Step 3
-Enable the plugin in the project settings.
+- 解压文件并且放到你的项目文件夹。确保 “addons” 是 res:// 的子文件夹。
+- DO NOT change the name of the 'addons' or 'Todo_Manager' folders as this will break the saving and loading of your settings.
+- 不要更改 “addons” 或 “Todo_Manager” 文件夹的名称，因为这会打破预设的保存和加载。
+
+#### 第三步
+
+在项目设置里启用这个插件。
 ![Project image](https://github.com/OrigamiDev-Pete/TODO_Manager/blob/main/addons/Todo_Manager/doc/images/Instruct4.png)
