@@ -20,7 +20,7 @@ var plugin : EditorPlugin
 var todo_items : Array
 
 var script_colour := Color("ccced3")
-var ignore_paths := []
+var ignore_paths : Array[String] = []
 var full_path := false
 var auto_refresh := true
 var builtin_enabled := false
@@ -137,6 +137,7 @@ func populate_settings() -> void:
 				colour_picker))
 		pattern_edit.remove_button.pressed.connect(remove_pattern.bind(i,
 				pattern_edit, colour_picker))
+		
 	var pattern_button := $VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4/Patterns/AddPatternButton
 	$VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4/Patterns.move_child(pattern_button, 0)
 	
@@ -147,7 +148,7 @@ func populate_settings() -> void:
 	var ignore_paths_text := ""
 	for path in ignore_paths:
 		ignore_paths_text += path + ", "
-	ignore_paths_text.rstrip(' ').rstrip(',')
+	ignore_paths_text = ignore_paths_text.trim_suffix(", ")
 	ignore_paths_field.text = ignore_paths_text
 
 

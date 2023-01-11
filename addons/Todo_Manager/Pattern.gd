@@ -2,8 +2,7 @@
 extends HBoxContainer
 
 
-var text : String:
-	set = set_text
+var text : String : set = set_text
 var disabled : bool
 var index : int
 

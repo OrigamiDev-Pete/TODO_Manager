@@ -32,7 +32,7 @@ func _enter_tree() -> void:
 	get_editor_interface().get_script_editor().connect("editor_script_changed",
 			_on_active_script_changed)
 	_dockUI.plugin = self
-	
+
 	combined_pattern = combine_patterns(_dockUI.patterns)
 	find_tokens_from_path(find_scripts())
 	_dockUI.build_tree()
