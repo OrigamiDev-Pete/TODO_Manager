@@ -1,6 +1,10 @@
 # TODO Manager
 
- [简体中文](READMECN.md)![example_image](https://github.com/OrigamiDev-Pete/TODO_Manager/blob/main/addons/Todo_Manager/doc/images/example1.png)
+ [简体中文](READMECN.md)
+
+
+
+![example_image](https://github.com/OrigamiDev-Pete/TODO_Manager/blob/main/addons/Todo_Manager/doc/images/example1.png)
 
 ## Simple and flexible
 
