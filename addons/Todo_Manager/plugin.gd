@@ -232,7 +232,7 @@ func rescan_files(clear_cache: bool) -> void:
 	_dockUI.build_tree()
 
 
-func combine_patterns(patterns: Array[Array]) -> String:
+func combine_patterns(patterns: Array) -> String:
 	if patterns.size() == 1:
 		return patterns[0][0]
 	else:

@@ -186,7 +186,7 @@ func load_config() -> void:
 		full_path = config.get_value("scripts", "full_path", DEFAULT_SCRIPT_NAME)
 		_sort_alphabetical = config.get_value("scripts", "sort_alphabetical", DEFAULT_SORT)
 		script_colour = config.get_value("scripts", "script_colour", DEFAULT_SCRIPT_COLOUR)
-		ignore_paths = config.get_value("scripts", "ignore_paths", [])
+		ignore_paths = config.get_value("scripts", "ignore_paths", [] as Array[String])
 		patterns = config.get_value("patterns", "patterns", DEFAULT_PATTERNS)
 		auto_refresh = config.get_value("config", "auto_refresh", true)
 		builtin_enabled = config.get_value("config", "builtin_enabled", false)
