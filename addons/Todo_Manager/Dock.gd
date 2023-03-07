@@ -247,6 +247,7 @@ func case_sensitive_pattern(active: bool, index: int) -> void:
 		patterns[index][2] = CASE_SENSITIVE
 	else:
 		patterns[index][2] = CASE_INSENSITIVE
+	plugin.rescan_files(true)
 
 func _on_DefaultButton_pressed() -> void:
 	patterns = DEFAULT_PATTERNS.duplicate(true)
