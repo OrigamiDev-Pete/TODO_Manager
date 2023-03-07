@@ -233,23 +233,24 @@ func rescan_files(clear_cache: bool) -> void:
 
 
 func combine_patterns(patterns: Array) -> String:
+	# Case Sensitivity
+	var cased_patterns : Array[String] = []
+	for pattern in patterns:
+		if pattern[2] == _dockUI.CASE_SENSITIVE:
+			cased_patterns.append(pattern[0].insert(0, "((?i)") + ")")
+		else: 
+			cased_patterns.append("(" + pattern[0] + ")")
+	
 	if patterns.size() == 1:
-		return patterns[0][0]
+		return cased_patterns[0]
 	else:
-#		var pattern_string : String
 		var pattern_string := "((\\/\\*)|(#|\\/\\/))\\s*("
 		for i in range(patterns.size()):
 			if i == 0:
-				pattern_string += patterns[i][0]
+				pattern_string += cased_patterns[i]
 			else:
-				pattern_string += "|" + patterns[i][0]
+				pattern_string += "|" + cased_patterns[i]
 		pattern_string += ")(?(2)[\\s\\S]*?\\*\\/|.*)"
-#			if i == 0:
-##				pattern_string = "#\\s*" + patterns[i][0] + ".*"		
-#				pattern_string = "((\\/\\*)|(#|\\/\\/))\\s*" + patterns[i][0] + ".*" 		# (?(2)[\\s\\S]*?\\*\\/|.*)
-#			else:
-##				pattern_string += "|" + "#\\s*" + patterns[i][0]  + ".*"
-#				pattern_string += "|" + "((\\/\\*)|(#|\\/\\/))\\s*" + patterns[i][0]  + ".*"
 		return pattern_string
 
 

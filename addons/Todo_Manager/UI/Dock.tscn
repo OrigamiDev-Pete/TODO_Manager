@@ -267,6 +267,7 @@ layout_mode = 2
 [node name="RefreshCheckButton" type="CheckButton" parent="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer5/Patterns"]
 layout_mode = 2
 size_flags_horizontal = 0
+button_pressed = true
 text = "Auto Refresh"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer5/Patterns"]

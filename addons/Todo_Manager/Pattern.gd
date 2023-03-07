@@ -6,10 +6,9 @@ var text : String : set = set_text
 var disabled : bool
 var index : int
 
-
 @onready var line_edit := $LineEdit as LineEdit
 @onready var remove_button := $RemoveButton as Button
-
+@onready var case_checkbox := %CaseSensativeCheckbox as CheckBox
 
 func _ready() -> void:
 	line_edit.text = text

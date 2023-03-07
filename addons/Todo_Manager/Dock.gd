@@ -2,6 +2,7 @@
 extends Control
 
 #signal tree_built # used for debugging
+enum { CASE_INSENSITIVE, CASE_SENSITIVE }
 
 const Project := preload("res://addons/Todo_Manager/Project.gd")
 const Current := preload("res://addons/Todo_Manager/Current.gd")
@@ -10,7 +11,7 @@ const Todo := preload("res://addons/Todo_Manager/todo_class.gd")
 const TodoItem := preload("res://addons/Todo_Manager/todoItem_class.gd")
 const ColourPicker := preload("res://addons/Todo_Manager/UI/ColourPicker.tscn")
 const Pattern := preload("res://addons/Todo_Manager/UI/Pattern.tscn")
-const DEFAULT_PATTERNS := [["\\bTODO\\b", Color("96f1ad")], ["\\bHACK\\b", Color("d5bc70")], ["\\bFIXME\\b", Color("d57070")]]
+const DEFAULT_PATTERNS := [["\\bTODO\\b", Color("96f1ad"), CASE_INSENSITIVE], ["\\bHACK\\b", Color("d5bc70"), CASE_INSENSITIVE], ["\\bFIXME\\b", Color("d57070"), CASE_INSENSITIVE]]
 const DEFAULT_SCRIPT_COLOUR := Color("ccced3")
 const DEFAULT_SCRIPT_NAME := false
 const DEFAULT_SORT := true
@@ -26,7 +27,8 @@ var auto_refresh := true
 var builtin_enabled := false
 var _sort_alphabetical := true
 
-var patterns := [["\\bTODO\\b", Color("96f1ad")], ["\\bHACK\\b", Color("d5bc70")], ["\\bFIXME\\b", Color("d57070")]]
+var patterns := [["\\bTODO\\b", Color("96f1ad"), CASE_INSENSITIVE], ["\\bHACK\\b", Color("d5bc70"), CASE_INSENSITIVE], ["\\bFIXME\\b", Color("d57070"), CASE_INSENSITIVE]]
+
 
 @onready var tabs := $VBoxContainer/TabContainer as TabContainer
 @onready var project := $VBoxContainer/TabContainer/Project as Project
@@ -137,6 +139,8 @@ func populate_settings() -> void:
 				colour_picker))
 		pattern_edit.remove_button.pressed.connect(remove_pattern.bind(i,
 				pattern_edit, colour_picker))
+		pattern_edit.case_checkbox.toggled.connect(case_sensitive_pattern.bind(i))
+		pattern_edit.case_checkbox.button_pressed = patterns[i][2]
 		
 	var pattern_button := $VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4/Patterns/AddPatternButton
 	$VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4/Patterns.move_child(pattern_button, 0)
@@ -223,9 +227,6 @@ func _on_FullPathCheckBox_toggled(button_pressed: bool) -> void:
 func _on_ScriptColourPickerButton_color_changed(color: Color) -> void:
 	script_colour = color
 
-func _on_TODOColourPickerButton_color_changed(color: Color) -> void:
-	patterns[0][1] = color
-
 func _on_RescanButton_pressed() -> void:
 	plugin.rescan_files(true)
 
@@ -240,6 +241,12 @@ func remove_pattern(index: int, this: Node, this_colour: Node) -> void:
 	patterns.remove_at(index)
 	this.queue_free()
 	this_colour.queue_free()
+
+func case_sensitive_pattern(active: bool, index: int) -> void:
+	if active:
+		patterns[index][2] = CASE_SENSITIVE
+	else:
+		patterns[index][2] = CASE_INSENSITIVE
 
 func _on_DefaultButton_pressed() -> void:
 	patterns = DEFAULT_PATTERNS.duplicate(true)
