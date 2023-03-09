@@ -19,6 +19,7 @@ class TodoCacheValue:
 var todo_cache : Dictionary # { key: script_path, value: TodoCacheValue } 
 var remove_queue : Array
 var combined_pattern : String
+var cased_patterns : Array[String]
 
 var refresh_lock := false # makes sure _on_filesystem_changed only triggers once
 
@@ -234,9 +235,9 @@ func rescan_files(clear_cache: bool) -> void:
 
 func combine_patterns(patterns: Array) -> String:
 	# Case Sensitivity
-	var cased_patterns : Array[String] = []
+	cased_patterns = []
 	for pattern in patterns:
-		if pattern[2] == _dockUI.CASE_SENSITIVE:
+		if pattern[2] == _dockUI.CASE_INSENSITIVE:
 			cased_patterns.append(pattern[0].insert(0, "((?i)") + ")")
 		else: 
 			cased_patterns.append("(" + pattern[0] + ")")
@@ -257,16 +258,16 @@ func combine_patterns(patterns: Array) -> String:
 func create_todo(todo_string: String, script_path: String) -> Todo:
 	var todo := Todo.new()
 	var regex = RegEx.new()
-	for pattern in _dockUI.patterns:
-		if regex.compile(pattern[0]) == OK:
+	for pattern in cased_patterns:
+		if regex.compile(pattern) == OK:
 			var result : RegExMatch = regex.search(todo_string)
 			if result:
-				todo.pattern = pattern[0]
+				todo.pattern = pattern
 				todo.title = result.strings[0]
 			else:
 				continue
 		else:
-			printerr("Error compiling " + pattern[0])
+			printerr("Error compiling " + pattern)
 	
 	todo.content = todo_string
 	todo.script_path = script_path

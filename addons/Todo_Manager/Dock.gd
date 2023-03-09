@@ -50,10 +50,10 @@ func build_tree() -> void:
 	if tabs:
 		match tabs.current_tab:
 			0:
-				project.build_tree(todo_items, ignore_paths, patterns, _sort_alphabetical, full_path)
+				project.build_tree(todo_items, ignore_paths, patterns, plugin.cased_patterns, _sort_alphabetical, full_path)
 				create_config_file()
 			1:
-				current.build_tree(get_active_script(), patterns)
+				current.build_tree(get_active_script(), patterns, plugin.cased_patterns)
 				create_config_file()
 			2:
 				pass
@@ -236,11 +236,13 @@ func change_colour(colour: Color, index: int) -> void:
 func change_pattern(value: String, index: int, this_colour: Node) -> void:
 	patterns[index][0] = value
 	this_colour.title = value
+	plugin.rescan_files(true)
 
 func remove_pattern(index: int, this: Node, this_colour: Node) -> void:
 	patterns.remove_at(index)
 	this.queue_free()
 	this_colour.queue_free()
+	plugin.rescan_files(true)
 
 func case_sensitive_pattern(active: bool, index: int) -> void:
 	if active:
@@ -255,12 +257,14 @@ func _on_DefaultButton_pressed() -> void:
 	script_colour = DEFAULT_SCRIPT_COLOUR
 	full_path = DEFAULT_SCRIPT_NAME
 	rebuild_settings()
+	plugin.rescan_files(true)
 
 func _on_AlphSortCheckBox_toggled(button_pressed: bool) -> void:
 	_sort_alphabetical = button_pressed
+	plugin.rescan_files(true)
 
 func _on_AddPatternButton_pressed() -> void:
-	patterns.append(["\\bplaceholder\\b", Color.WHITE])
+	patterns.append(["\\bplaceholder\\b", Color.WHITE, CASE_INSENSITIVE])
 	rebuild_settings()
 
 func _on_RefreshCheckButton_toggled(button_pressed: bool) -> void:
@@ -283,6 +287,7 @@ func _on_ignore_paths_changed(new_text: String) -> void:
 		if (path == "" || path == " "):
 			ignore_paths.remove_at(i)
 		i += 1
+	plugin.rescan_files(true)
 
 func _on_TabContainer_tab_changed(tab: int) -> void:
 	build_tree()

@@ -4,4 +4,4 @@ extends Node
 # HACK: this is a HACK
 # FIXME: this is a FIXME
 #      TODO          this works too
-#HACK any format will do
+#Hack any format will do

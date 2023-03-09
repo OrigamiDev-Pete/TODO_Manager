@@ -10,7 +10,7 @@ var _full_path := false
 
 @onready var tree := $Tree as Tree
 
-func build_tree(todo_items : Array, ignore_paths : Array, patterns : Array, sort_alphabetical : bool, full_path : bool) -> void:
+func build_tree(todo_items : Array, ignore_paths : Array, patterns : Array, cased_patterns: Array[String], sort_alphabetical : bool, full_path : bool) -> void:
 	_full_path = full_path
 	tree.clear()
 	if sort_alphabetical:
@@ -42,9 +42,10 @@ func build_tree(todo_items : Array, ignore_paths : Array, patterns : Array, sort
 			item.set_text(0, "(%0) - %1".format([todo.line_number, content_header], "%_"))
 			item.set_tooltip_text(0, todo.content)
 			item.set_metadata(0, todo)
-			for pattern in patterns:
-				if pattern[0] == todo.pattern:
-					item.set_custom_color(0, pattern[1])
+			print(todo.title)
+			for i in range(0, len(cased_patterns)):
+				if cased_patterns[i] == todo.pattern:
+					item.set_custom_color(0, patterns[i][1])
 	emit_signal("tree_built")
 
 
