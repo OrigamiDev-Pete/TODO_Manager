@@ -44,9 +44,8 @@ func queue_remove(file: String):
 
 func find_tokens_from_path(scripts: Array) -> void:
 	for script_path in scripts:
-		var file := File.new()
-		file.open(script_path, File.READ)
-		var contents := file.get_as_text()
+		var file = FileAccess.open(script_path, FileAccess.READ)
+		var contents = file.get_as_text()
 		file.close()
 		find_tokens(contents, script_path)
 
@@ -162,9 +161,9 @@ func _on_filesystem_changed() -> void:
 func find_scripts() -> Array:
 	var scripts : Array
 	var directory_queue : Array
-	var dir : Directory = Directory.new()
+	var dir : DirAccess = DirAccess.open("res://")
 	### FIRST PHASE ###
-	if dir.open("res://") == OK:
+	if dir:
 		get_dir_contents(dir, scripts, directory_queue)
 	else:
 		printerr("TODO_Manager: There was an error during find_scripts() ### First Phase ###")
@@ -187,7 +186,7 @@ func cache_scripts(scripts: Array) -> void:
 			script_cache.append(script)
 
 
-func get_dir_contents(dir: Directory, scripts: Array, directory_queue: Array) -> void:
+func get_dir_contents(dir: DirAccess, scripts: Array, directory_queue: Array) -> void:
 	dir.include_navigational = false
 	dir.include_hidden = false
 	dir.list_dir_begin()
