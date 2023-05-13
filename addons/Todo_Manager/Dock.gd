@@ -139,8 +139,8 @@ func populate_settings() -> void:
 				colour_picker))
 		pattern_edit.remove_button.pressed.connect(remove_pattern.bind(i,
 				pattern_edit, colour_picker))
-		pattern_edit.case_checkbox.toggled.connect(case_sensitive_pattern.bind(i))
 		pattern_edit.case_checkbox.button_pressed = patterns[i][2]
+		pattern_edit.case_checkbox.toggled.connect(case_sensitive_pattern.bind(i))
 		
 	var pattern_button := $VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4/Patterns/AddPatternButton
 	$VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4/Patterns.move_child(pattern_button, 0)
