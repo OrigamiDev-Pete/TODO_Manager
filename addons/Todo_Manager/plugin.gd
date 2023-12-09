@@ -212,15 +212,12 @@ func get_dir_contents(dir: DirAccess, scripts: Array[String], directory_queue: A
 			if file_name == ".import" or file_name == ".mono": # Skip .import folder which should never have scripts
 				pass
 			else:
-				directory_queue.append(dir.get_current_dir() + "/" + file_name)
+				directory_queue.append(dir.get_current_dir().path_join(file_name))
 		else:
 			if file_name.ends_with(".gd") or file_name.ends_with(".cs") \
 			or file_name.ends_with(".c") or file_name.ends_with(".cpp") or file_name.ends_with(".h") \
 			or ((file_name.ends_with(".tscn") and _dockUI.builtin_enabled)):
-				if dir.get_current_dir() == "res://":
-					scripts.append(dir.get_current_dir() + file_name)
-				else:
-					scripts.append(dir.get_current_dir() + "/" + file_name)
+				scripts.append(dir.get_current_dir().path_join(file_name))
 		file_name = dir.get_next()
 
 
