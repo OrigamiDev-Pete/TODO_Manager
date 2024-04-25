@@ -279,7 +279,6 @@ text = "Scan Built-in Scripts"
 
 [node name="Label" type="Label" parent="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer5/Patterns/HBoxContainer"]
 layout_mode = 2
-text = "Some functionality will not work for built-in scripts"
 
 [node name="DefaultButton" type="Button" parent="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer5/Patterns"]
 layout_mode = 2
