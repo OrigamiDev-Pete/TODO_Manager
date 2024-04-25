@@ -78,34 +78,34 @@ func get_active_script() -> TodoItem:
 		return todo_item
 
 
-func go_to_script(script_path: String, line_number : int = 0) -> void:
-	if plugin.get_editor_interface().get_editor_settings().get_setting("text_editor/external/use_external_editor"):
-		var exec_path = plugin.get_editor_interface().get_editor_settings().get_setting("text_editor/external/exec_path")
-		var args := get_exec_flags(exec_path, script_path, line_number)
-		OS.execute(exec_path, args)
-	else:
-		var script := load(script_path)
-		plugin.get_editor_interface().edit_resource(script)
-		plugin.get_editor_interface().get_script_editor().goto_line(line_number - 1)
-
-func get_exec_flags(editor_path : String, script_path : String, line_number : int) -> PackedStringArray:
-	var args : PackedStringArray
-	var script_global_path = ProjectSettings.globalize_path(script_path)
-	
-	if editor_path.ends_with("code.cmd") or editor_path.ends_with("code"): ## VS Code
-		args.append(ProjectSettings.globalize_path("res://"))
-		args.append("--goto")
-		args.append(script_global_path +  ":" + str(line_number))
-	
-	elif editor_path.ends_with("rider64.exe") or editor_path.ends_with("rider"): ## Rider
-		args.append("--line")
-		args.append(str(line_number))
-		args.append(script_global_path)
-		
-	else: ## Atom / Sublime
-		args.append(script_global_path + ":" + str(line_number))
-	
-	return args
+#func go_to_script(script_path: String, line_number : int = 0) -> void:
+	#if plugin.get_editor_interface().get_editor_settings().get_setting("text_editor/external/use_external_editor"):
+		#var exec_path = plugin.get_editor_interface().get_editor_settings().get_setting("text_editor/external/exec_path")
+		#var args := get_exec_flags(exec_path, script_path, line_number)
+		#OS.execute(exec_path, args)
+	#else:
+		#var script := load(script_path)
+		#plugin.get_editor_interface().edit_resource(script)
+		#plugin.get_editor_interface().get_script_editor().goto_line(line_number - 1)
+#
+#func get_exec_flags(editor_path : String, script_path : String, line_number : int) -> PackedStringArray:
+	#var args : PackedStringArray
+	#var script_global_path = ProjectSettings.globalize_path(script_path)
+	#
+	#if editor_path.ends_with("code.cmd") or editor_path.ends_with("code"): ## VS Code
+		#args.append(ProjectSettings.globalize_path("res://"))
+		#args.append("--goto")
+		#args.append(script_global_path +  ":" + str(line_number))
+	#
+	#elif editor_path.ends_with("rider64.exe") or editor_path.ends_with("rider"): ## Rider
+		#args.append("--line")
+		#args.append(str(line_number))
+		#args.append(script_global_path)
+		#
+	#else: ## Atom / Sublime
+		#args.append(script_global_path + ":" + str(line_number))
+	#
+	#return args
 
 func sort_alphabetical(a, b) -> bool:
 	if a.script_path > b.script_path:
@@ -216,10 +216,10 @@ func _on_Tree_item_activated() -> void:
 			item = current_tree.get_selected()
 	if item.get_metadata(0) is Todo:
 		var todo : Todo = item.get_metadata(0)
-		call_deferred("go_to_script", todo.script_path, todo.line_number)
+		plugin.get_editor_interface().edit_script(load(todo.script_path), todo.line_number)
 	else:
 		var todo_item = item.get_metadata(0)
-		call_deferred("go_to_script", todo_item.script_path)
+		plugin.get_editor_interface().edit_script(load(todo_item.script_path))
 
 func _on_FullPathCheckBox_toggled(button_pressed: bool) -> void:
 	full_path = button_pressed
