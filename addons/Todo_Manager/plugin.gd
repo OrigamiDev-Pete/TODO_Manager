@@ -55,10 +55,20 @@ func find_tokens_from_path(scripts: Array[String]) -> void:
 	for script_path in scripts:
 		var file := FileAccess.open(script_path, FileAccess.READ)
 		var contents := file.get_as_text()
-		find_tokens(contents, script_path)
+		if script_path.ends_with(".tscn"):
+			handle_built_in_scripts(contents, script_path)
+		else:
+			find_tokens(contents, script_path)
 
-func find_tokens_from_script(script: Resource) -> void:
-	find_tokens(script.source_code, script.resource_path)
+
+func handle_built_in_scripts(contents: String, resource_path: String):
+	var s := contents.split("sub_resource type=\"GDScript\"")
+	if s.size() <= 1:
+		return
+	for i in range(1, s.size()):
+		var script_components := s[i].split("script/source")
+		var script_name = script_components[0].substr(5, 14)
+		find_tokens(script_components[1], resource_path + "::" + script_name)
 
 
 func find_tokens(text: String, script_path: String) -> void:
@@ -172,13 +182,11 @@ func find_scripts() -> Array[String]:
 	var scripts : Array[String]
 	var directory_queue : Array[String]
 	var dir := DirAccess.open("res://")
-	### FIRST PHASE ###
 	if dir.get_open_error() == OK:
 		get_dir_contents(dir, scripts, directory_queue)
 	else:
-		printerr("TODO_Manager: There was an error during find_scripts() ### First Phase ###")
+		printerr("TODO_Manager: There was an error during find_scripts()")
 	
-	### SECOND PHASE ###
 	while not directory_queue.is_empty():
 		if dir.change_dir(directory_queue[0]) == OK:
 			get_dir_contents(dir, scripts, directory_queue)
@@ -195,9 +203,11 @@ func cache_todos(todos: Array, script_path: String) -> void:
 
 
 func get_cached_todos(script_path: String) -> Array:
-	if todo_cache.has(script_path):
+	if todo_cache.has(script_path) and !script_path.contains("tscn::"):
 		var cached_value: TodoCacheValue = todo_cache[script_path]
 		if cached_value.last_modified_time == FileAccess.get_modified_time(script_path):
+			print(script_path)
+			
 			return cached_value.todos
 	return []
 

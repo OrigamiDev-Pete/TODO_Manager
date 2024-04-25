@@ -42,7 +42,6 @@ func build_tree(todo_items : Array, ignore_paths : Array, patterns : Array, case
 			item.set_text(0, "(%0) - %1".format([todo.line_number, content_header], "%_"))
 			item.set_tooltip_text(0, todo.content)
 			item.set_metadata(0, todo)
-			#print(todo.title)
 			for i in range(0, len(cased_patterns)):
 				if cased_patterns[i] == todo.pattern:
 					item.set_custom_color(0, patterns[i][1])
