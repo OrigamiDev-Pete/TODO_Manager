@@ -206,7 +206,6 @@ func get_cached_todos(script_path: String) -> Array:
 	if todo_cache.has(script_path) and !script_path.contains("tscn::"):
 		var cached_value: TodoCacheValue = todo_cache[script_path]
 		if cached_value.last_modified_time == FileAccess.get_modified_time(script_path):
-			print(script_path)
 			
 			return cached_value.todos
 	return []
