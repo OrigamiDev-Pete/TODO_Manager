@@ -217,9 +217,11 @@ func _on_Tree_item_activated() -> void:
 	if item.get_metadata(0) is Todo:
 		var todo : Todo = item.get_metadata(0)
 		plugin.get_editor_interface().edit_script(load(todo.script_path), todo.line_number)
+		EditorInterface.set_main_screen_editor('Script')
 	else:
 		var todo_item = item.get_metadata(0)
 		plugin.get_editor_interface().edit_script(load(todo_item.script_path))
+		EditorInterface.set_main_screen_editor('Script')
 
 func _on_FullPathCheckBox_toggled(button_pressed: bool) -> void:
 	full_path = button_pressed
