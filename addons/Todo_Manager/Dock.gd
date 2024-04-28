@@ -82,6 +82,8 @@ func go_to_script(script_path: String, line_number : int = 0) -> void:
 	if plugin.get_editor_interface().get_editor_settings().get_setting("text_editor/external/use_external_editor"):
 		var exec_path = plugin.get_editor_interface().get_editor_settings().get_setting("text_editor/external/exec_path")
 		var args := get_exec_flags(exec_path, script_path, line_number)
+		print(exec_path)
+		print(args)
 		OS.execute(exec_path, args)
 	else:
 		var script := load(script_path)
@@ -91,13 +93,15 @@ func go_to_script(script_path: String, line_number : int = 0) -> void:
 func get_exec_flags(editor_path : String, script_path : String, line_number : int) -> PackedStringArray:
 	var args : PackedStringArray
 	var script_global_path = ProjectSettings.globalize_path(script_path)
+
+	var lowercase_editor_path = editor_path.to_lower()
 	
-	if editor_path.ends_with("code.cmd") or editor_path.ends_with("code"): ## VS Code
+	if lowercase_editor_path.ends_with("code.cmd") or lowercase_editor_path.ends_with("code") or lowercase_editor_path.ends_with("code.exe"): ## VS Code
 		args.append(ProjectSettings.globalize_path("res://"))
 		args.append("--goto")
 		args.append(script_global_path +  ":" + str(line_number))
 	
-	elif editor_path.ends_with("rider64.exe") or editor_path.ends_with("rider"): ## Rider
+	elif lowercase_editor_path.ends_with("rider64.exe") or lowercase_editor_path.ends_with("rider"): ## Rider
 		args.append("--line")
 		args.append(str(line_number))
 		args.append(script_global_path)
