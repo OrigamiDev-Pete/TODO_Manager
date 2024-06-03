@@ -5,18 +5,14 @@ signal tree_built # used for debugging
 
 const Todo := preload("res://addons/Todo_Manager/todo_class.gd")
 
-var _sort_alphabetical := true
 var _full_path := false
 
 @onready var tree := $Tree as Tree
 
-func build_tree(todo_items : Array, ignore_paths : Array, patterns : Array, cased_patterns: Array[String], sort_alphabetical : bool, full_path : bool) -> void:
+func build_tree(todo_items : Array, ignore_paths : Array, patterns : Array, cased_patterns: Array[String], _sort_type: int, full_path : bool) -> void:
 	_full_path = full_path
 	tree.clear()
-	if sort_alphabetical:
-		todo_items.sort_custom(Callable(self, "sort_alphabetical"))
-	else:
-		todo_items.sort_custom(Callable(self, "sort_backwards"))
+	todo_items.sort_custom([sort_alphabetical, sort_backwards, sort_script_lmt][_sort_type])
 	var root := tree.create_item()
 	root.set_text(0, "Scripts")
 	for todo_item in todo_items:
@@ -26,13 +22,14 @@ func build_tree(todo_items : Array, ignore_paths : Array, patterns : Array, case
 			if script_path.begins_with(ignore_path) or script_path.begins_with("res://" + ignore_path) or script_path.begins_with("res:///" + ignore_path):
 				ignore = true
 				break
-		if ignore: 
+		if ignore:
 			continue
 		var script := tree.create_item(root)
+		var time_string := Time.get_datetime_string_from_unix_time(FileAccess.get_modified_time(todo_item.script_path), true)
 		if full_path:
-			script.set_text(0, todo_item.script_path + " -------")
+			script.set_text(0, todo_item.script_path + " ------- " + time_string)
 		else:
-			script.set_text(0, todo_item.get_short_path() + " -------")
+			script.set_text(0, todo_item.get_short_path() + " ------- " + time_string)
 		script.set_metadata(0, todo_item)
 		for todo in todo_item.todos:
 			var item := tree.create_item(script)
@@ -47,7 +44,6 @@ func build_tree(todo_items : Array, ignore_paths : Array, patterns : Array, case
 					item.set_custom_color(0, patterns[i][1])
 	emit_signal("tree_built")
 
-
 func sort_alphabetical(a, b) -> bool:
 	if _full_path:
 		if a.script_path < b.script_path:
@@ -61,13 +57,7 @@ func sort_alphabetical(a, b) -> bool:
 			return false
 
 func sort_backwards(a, b) -> bool:
-	if _full_path:
-		if a.script_path > b.script_path:
-			return true
-		else:
-			return false
-	else:
-		if a.get_short_path() > b.get_short_path():
-			return true
-		else:
-			return false
+	return sort_alphabetical(b, a)
+
+func sort_script_lmt(a, b) -> bool:
+	return FileAccess.get_modified_time(a.script_path) > FileAccess.get_modified_time(b.script_path)

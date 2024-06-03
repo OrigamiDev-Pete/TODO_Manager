@@ -6,8 +6,6 @@ signal tree_built # used for debugging
 const Todo := preload("res://addons/Todo_Manager/todo_class.gd")
 const TodoItem := preload("res://addons/Todo_Manager/todoItem_class.gd")
 
-var _sort_alphabetical := true
-
 @onready var tree := $Tree as Tree
 
 func build_tree(todo_item : TodoItem, patterns : Array, cased_patterns : Array[String]) -> void:
@@ -29,16 +27,3 @@ func build_tree(todo_item : TodoItem, patterns : Array, cased_patterns : Array[S
 			if cased_patterns[i] == todo.pattern:
 				item.set_custom_color(0, patterns[i][1])
 	emit_signal("tree_built")
-
-
-func sort_alphabetical(a, b) -> bool:
-	if a.script_path > b.script_path:
-		return true
-	else:
-		return false
-
-func sort_backwards(a, b) -> bool:
-	if a.script_path < b.script_path:
-		return true
-	else:
-		return false
