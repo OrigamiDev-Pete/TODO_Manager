@@ -41,6 +41,7 @@ var patterns := [["\\bTODO\\b", Color("96f1ad"), CASE_INSENSITIVE], ["\\bHACK\\b
 @onready var pattern_container := $VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4/Patterns as VBoxContainer
 @onready var ignore_textbox := $VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/IgnorePaths/TextEdit as LineEdit
 @onready var auto_refresh_button := $VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer5/Patterns/RefreshCheckButton as CheckButton
+@onready var sort_option_button = %SortOptionButton
 
 func _ready() -> void:
 	load_config()
@@ -144,6 +145,7 @@ func populate_settings() -> void:
 	ignore_paths_field.text = ignore_paths_text
 
 	auto_refresh_button.button_pressed = auto_refresh
+	sort_option_button.selected = _sort_type
 
 
 func rebuild_settings() -> void:

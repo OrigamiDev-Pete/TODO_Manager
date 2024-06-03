@@ -25,11 +25,11 @@ func build_tree(todo_items : Array, ignore_paths : Array, patterns : Array, case
 		if ignore:
 			continue
 		var script := tree.create_item(root)
-		var time_string := Time.get_datetime_string_from_unix_time(FileAccess.get_modified_time(todo_item.script_path), true)
-		if full_path:
-			script.set_text(0, todo_item.script_path + " ------- " + time_string)
-		else:
-			script.set_text(0, todo_item.get_short_path() + " ------- " + time_string)
+		var text := "%s ------- %s" % [
+			todo_item.script_path if full_path else todo_item.get_short_path(),
+			"" if _sort_type != 2 else _datetime_of_file_path(todo_item.script_path)
+		]
+		script.set_text(0, text)
 		script.set_metadata(0, todo_item)
 		for todo in todo_item.todos:
 			var item := tree.create_item(script)
@@ -43,6 +43,12 @@ func build_tree(todo_items : Array, ignore_paths : Array, patterns : Array, case
 				if cased_patterns[i] == todo.pattern:
 					item.set_custom_color(0, patterns[i][1])
 	emit_signal("tree_built")
+
+func _datetime_of_file_path(path: String) -> String:
+	var unix_time := FileAccess.get_modified_time(path)
+	var timezone_dict := Time.get_time_zone_from_system()
+	var time_string := Time.get_datetime_string_from_unix_time(unix_time + timezone_dict.bias * 60.0, true)
+	return time_string
 
 func sort_alphabetical(a, b) -> bool:
 	if _full_path:

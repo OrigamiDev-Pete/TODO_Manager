@@ -53,7 +53,6 @@ text = "Settings"
 [node name="TabContainer" type="TabContainer" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-current_tab = 0
 
 [node name="Project" type="Panel" parent="VBoxContainer/TabContainer"]
 layout_mode = 2
@@ -162,10 +161,12 @@ layout_mode = 2
 text = "Sort Order:"
 
 [node name="SortOptionButton" type="OptionButton" parent="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/ScriptSort"]
+unique_name_in_owner = true
 layout_mode = 2
-selected = 0
 item_count = 3
+selected = 1
 popup/item_0/text = "Alphabetical"
+popup/item_0/id = 0
 popup/item_1/text = "Reverse Alphabetical"
 popup/item_1/id = 1
 popup/item_2/text = "Script Last Modified Time"
