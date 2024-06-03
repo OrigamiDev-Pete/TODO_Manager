@@ -9,13 +9,9 @@ script = ExtResource("1")
 metadata/_edit_use_custom_anchors = false
 
 [node name="Label" type="Label" parent="."]
-offset_top = 4.0
-offset_right = 1.0
-offset_bottom = 27.0
+layout_mode = 2
 
 [node name="TODOColourPickerButton" type="ColorPickerButton" parent="."]
 custom_minimum_size = Vector2(40, 0)
-offset_left = 65.0
-offset_right = 105.0
-offset_bottom = 31.0
+layout_mode = 2
 size_flags_horizontal = 10

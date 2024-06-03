@@ -14,4 +14,4 @@ func _ready() -> void:
 
 func set_title(value: String) -> void:
 	title = value
-	$Label.text = value 
+	$Label.text = value

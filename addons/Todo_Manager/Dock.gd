@@ -14,7 +14,7 @@ const Pattern := preload("res://addons/Todo_Manager/UI/Pattern.tscn")
 const DEFAULT_PATTERNS := [["\\bTODO\\b", Color("96f1ad"), CASE_INSENSITIVE], ["\\bHACK\\b", Color("d5bc70"), CASE_INSENSITIVE], ["\\bFIXME\\b", Color("d57070"), CASE_INSENSITIVE]]
 const DEFAULT_SCRIPT_COLOUR := Color("ccced3")
 const DEFAULT_SCRIPT_NAME := false
-const DEFAULT_SORT := true
+const DEFAULT_SORT := SortType.ALPHABETICAL
 
 var plugin : EditorPlugin
 
@@ -25,7 +25,8 @@ var ignore_paths : Array[String] = []
 var full_path := false
 var auto_refresh := true
 var builtin_enabled := false
-var _sort_alphabetical := true
+enum SortType {ALPHABETICAL, RALPHABETICAL, SCRIPT_LAST_MODIFIED_TIME}
+var _sort_type := SortType.ALPHABETICAL
 
 var patterns := [["\\bTODO\\b", Color("96f1ad"), CASE_INSENSITIVE], ["\\bHACK\\b", Color("d5bc70"), CASE_INSENSITIVE], ["\\bFIXME\\b", Color("d57070"), CASE_INSENSITIVE]]
 
@@ -40,6 +41,7 @@ var patterns := [["\\bTODO\\b", Color("96f1ad"), CASE_INSENSITIVE], ["\\bHACK\\b
 @onready var pattern_container := $VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4/Patterns as VBoxContainer
 @onready var ignore_textbox := $VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/IgnorePaths/TextEdit as LineEdit
 @onready var auto_refresh_button := $VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer5/Patterns/RefreshCheckButton as CheckButton
+@onready var sort_option_button = %SortOptionButton
 
 func _ready() -> void:
 	load_config()
@@ -50,7 +52,7 @@ func build_tree() -> void:
 	if tabs:
 		match tabs.current_tab:
 			0:
-				project.build_tree(todo_items, ignore_paths, patterns, plugin.cased_patterns, _sort_alphabetical, full_path)
+				project.build_tree(todo_items, ignore_paths, patterns, plugin.cased_patterns, _sort_type, full_path)
 				create_config_file()
 			1:
 				current.build_tree(get_active_script(), patterns, plugin.cased_patterns)
@@ -68,7 +70,7 @@ func get_active_script() -> TodoItem:
 		for todo_item in todo_items:
 			if todo_item.script_path == script_path:
 				return todo_item
-		
+
 		# nothing found
 		var todo_item := TodoItem.new(script_path, [])
 		return todo_item
@@ -91,34 +93,21 @@ func go_to_script(script_path: String, line_number : int = 0) -> void:
 func get_exec_flags(editor_path : String, script_path : String, line_number : int) -> PackedStringArray:
 	var args : PackedStringArray
 	var script_global_path = ProjectSettings.globalize_path(script_path)
-	
+
 	if editor_path.ends_with("code.cmd") or editor_path.ends_with("code"): ## VS Code
 		args.append(ProjectSettings.globalize_path("res://"))
 		args.append("--goto")
 		args.append(script_global_path +  ":" + str(line_number))
-	
+
 	elif editor_path.ends_with("rider64.exe") or editor_path.ends_with("rider"): ## Rider
 		args.append("--line")
 		args.append(str(line_number))
 		args.append(script_global_path)
-		
+
 	else: ## Atom / Sublime
 		args.append(script_global_path + ":" + str(line_number))
-	
+
 	return args
-
-func sort_alphabetical(a, b) -> bool:
-	if a.script_path > b.script_path:
-		return true
-	else:
-		return false
-
-func sort_backwards(a, b) -> bool:
-	if a.script_path < b.script_path:
-		return true
-	else:
-		return false
-
 
 func populate_settings() -> void:
 	for i in patterns.size():
@@ -129,7 +118,7 @@ func populate_settings() -> void:
 		colour_picker.index = i
 		colours_container.add_child(colour_picker)
 		colour_picker.colour_picker.color_changed.connect(change_colour.bind(i))
-		
+
 		## Create Patterns
 		var pattern_edit: Variant = Pattern.instantiate()
 		pattern_edit.text = patterns[i][0]
@@ -141,10 +130,10 @@ func populate_settings() -> void:
 				pattern_edit, colour_picker))
 		pattern_edit.case_checkbox.button_pressed = patterns[i][2]
 		pattern_edit.case_checkbox.toggled.connect(case_sensitive_pattern.bind(i))
-		
+
 	var pattern_button := $VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4/Patterns/AddPatternButton
 	$VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4/Patterns.move_child(pattern_button, 0)
-	
+
 	# path filtering
 	var ignore_paths_field := ignore_textbox
 	if not ignore_paths_field.is_connected("text_changed", _on_ignore_paths_changed):
@@ -154,8 +143,9 @@ func populate_settings() -> void:
 		ignore_paths_text += path + ", "
 	ignore_paths_text = ignore_paths_text.trim_suffix(", ")
 	ignore_paths_field.text = ignore_paths_text
-	
+
 	auto_refresh_button.button_pressed = auto_refresh
+	sort_option_button.selected = _sort_type
 
 
 func rebuild_settings() -> void:
@@ -172,15 +162,15 @@ func rebuild_settings() -> void:
 func create_config_file() -> void:
 	var config = ConfigFile.new()
 	config.set_value("scripts", "full_path", full_path)
-	config.set_value("scripts", "sort_alphabetical", _sort_alphabetical)
+	config.set_value("scripts", "sort_type", _sort_type)
 	config.set_value("scripts", "script_colour", script_colour)
 	config.set_value("scripts", "ignore_paths", ignore_paths)
-	
+
 	config.set_value("patterns", "patterns", patterns)
-	
+
 	config.set_value("config", "auto_refresh", auto_refresh)
 	config.set_value("config", "builtin_enabled", builtin_enabled)
-	
+
 	var err = config.save("res://addons/Todo_Manager/todo.cfg")
 
 
@@ -188,7 +178,7 @@ func load_config() -> void:
 	var config := ConfigFile.new()
 	if config.load("res://addons/Todo_Manager/todo.cfg") == OK:
 		full_path = config.get_value("scripts", "full_path", DEFAULT_SCRIPT_NAME)
-		_sort_alphabetical = config.get_value("scripts", "sort_alphabetical", DEFAULT_SORT)
+		_sort_type = config.get_value("scripts", "sort_type", DEFAULT_SORT)
 		script_colour = config.get_value("scripts", "script_colour", DEFAULT_SCRIPT_COLOUR)
 		ignore_paths = config.get_value("scripts", "ignore_paths", [] as Array[String])
 		patterns = config.get_value("patterns", "patterns", DEFAULT_PATTERNS)
@@ -212,7 +202,7 @@ func _on_Tree_item_activated() -> void:
 	match tabs.current_tab:
 		0:
 			item = project_tree.get_selected()
-		1: 
+		1:
 			item = current_tree.get_selected()
 	if item.get_metadata(0) is Todo:
 		var todo : Todo = item.get_metadata(0)
@@ -253,14 +243,14 @@ func case_sensitive_pattern(active: bool, index: int) -> void:
 
 func _on_DefaultButton_pressed() -> void:
 	patterns = DEFAULT_PATTERNS.duplicate(true)
-	_sort_alphabetical = DEFAULT_SORT
+	_sort_type = DEFAULT_SORT
 	script_colour = DEFAULT_SCRIPT_COLOUR
 	full_path = DEFAULT_SCRIPT_NAME
 	rebuild_settings()
 	plugin.rescan_files(true)
 
-func _on_AlphSortCheckBox_toggled(button_pressed: bool) -> void:
-	_sort_alphabetical = button_pressed
+func _on_sort_option_button_item_selected(index: int) -> void:
+	_sort_type = index
 	plugin.rescan_files(true)
 
 func _on_AddPatternButton_pressed() -> void:
@@ -278,7 +268,7 @@ func _on_ignore_paths_changed(new_text: String) -> void:
 	var split: Array = text.split(',')
 	ignore_paths.clear()
 	for elem in split:
-		if elem == " " || elem == "": 
+		if elem == " " || elem == "":
 			continue
 		ignore_paths.push_front(elem.lstrip(' ').rstrip(' '))
 	# validate so no empty string slips through (all paths ignored)

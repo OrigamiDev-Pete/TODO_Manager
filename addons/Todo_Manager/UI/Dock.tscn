@@ -1,12 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://b6k0dtftankcx"]
+[gd_scene load_steps=5 format=3 uid="uid://b6k0dtftankcx"]
 
 [ext_resource type="Script" path="res://addons/Todo_Manager/Dock.gd" id="1"]
 [ext_resource type="Script" path="res://addons/Todo_Manager/Project.gd" id="2"]
 [ext_resource type="Script" path="res://addons/Todo_Manager/Current.gd" id="3"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_kqxcu"]
-
-[sub_resource type="ButtonGroup" id="ButtonGroup_kltg3"]
 
 [node name="Dock" type="Control"]
 custom_minimum_size = Vector2(0, 200)
@@ -61,6 +59,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("2")
+metadata/_tab_index = 0
 
 [node name="Tree" type="Tree" parent="VBoxContainer/TabContainer/Project"]
 layout_mode = 1
@@ -77,6 +76,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("3")
+metadata/_tab_index = 1
 
 [node name="Tree" type="Tree" parent="VBoxContainer/TabContainer/Current"]
 layout_mode = 1
@@ -91,6 +91,7 @@ hide_root = true
 [node name="Settings" type="Panel" parent="VBoxContainer/TabContainer"]
 visible = false
 layout_mode = 2
+metadata/_tab_index = 2
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/TabContainer/Settings"]
 layout_mode = 1
@@ -159,16 +160,17 @@ layout_mode = 2
 layout_mode = 2
 text = "Sort Order:"
 
-[node name="AlphSortCheckBox" type="CheckBox" parent="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/ScriptSort"]
+[node name="SortOptionButton" type="OptionButton" parent="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/ScriptSort"]
+unique_name_in_owner = true
 layout_mode = 2
-button_pressed = true
-button_group = SubResource("ButtonGroup_kltg3")
-text = "Alphabetical"
-
-[node name="RAlphSortCheckBox" type="CheckBox" parent="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/ScriptSort"]
-layout_mode = 2
-button_group = SubResource("ButtonGroup_kltg3")
-text = "Reverse Alphabetical"
+item_count = 3
+selected = 1
+popup/item_0/text = "Alphabetical"
+popup/item_0/id = 0
+popup/item_1/text = "Reverse Alphabetical"
+popup/item_1/id = 1
+popup/item_2/text = "Script Last Modified Time"
+popup/item_2/id = 2
 
 [node name="ScriptColour" type="HBoxContainer" parent="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts"]
 layout_mode = 2
@@ -305,7 +307,7 @@ flat = true
 [connection signal="item_activated" from="VBoxContainer/TabContainer/Project/Tree" to="." method="_on_Tree_item_activated"]
 [connection signal="item_activated" from="VBoxContainer/TabContainer/Current/Tree" to="." method="_on_Tree_item_activated"]
 [connection signal="toggled" from="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/ScriptName/FullPathCheckBox" to="." method="_on_FullPathCheckBox_toggled"]
-[connection signal="toggled" from="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/ScriptSort/AlphSortCheckBox" to="." method="_on_AlphSortCheckBox_toggled"]
+[connection signal="item_selected" from="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/ScriptSort/SortOptionButton" to="." method="_on_sort_option_button_item_selected"]
 [connection signal="color_changed" from="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/ScriptColour/ScriptColourPickerButton" to="." method="_on_ScriptColourPickerButton_color_changed"]
 [connection signal="pressed" from="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4/Patterns/AddPatternButton" to="." method="_on_AddPatternButton_pressed"]
 [connection signal="toggled" from="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer5/Patterns/RefreshCheckButton" to="." method="_on_RefreshCheckButton_toggled"]
