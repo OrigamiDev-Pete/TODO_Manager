@@ -213,12 +213,15 @@ func get_cached_todos(script_path: String) -> Array:
 func get_dir_contents(dir: DirAccess, scripts: Array[String], directory_queue: Array[String]) -> void:
 	dir.include_navigational = false
 	dir.include_hidden = false
+	if dir_has_gdignore(dir):
+		return
 	dir.list_dir_begin()
 	var file_name : String = dir.get_next()
+
 	
 	while file_name != "":
 		if dir.current_is_dir():
-			if file_name == ".import" or file_name == ".mono": # Skip .import folder which should never have scripts
+			if file_name.begins_with('.'): # Skip folders which should never have scripts
 				pass
 			else:
 				directory_queue.append(dir.get_current_dir().path_join(file_name))
@@ -228,7 +231,11 @@ func get_dir_contents(dir: DirAccess, scripts: Array[String], directory_queue: A
 			or ((file_name.ends_with(".tscn") and _dockUI.builtin_enabled)):
 				scripts.append(dir.get_current_dir().path_join(file_name))
 		file_name = dir.get_next()
+	dir.list_dir_end()
 
+func dir_has_gdignore(dir: DirAccess) -> bool:
+	var files = dir.get_files()
+	return files.has(".gdignore")
 
 func rescan_files(clear_cache: bool) -> void:
 	_dockUI.todo_items.clear()
