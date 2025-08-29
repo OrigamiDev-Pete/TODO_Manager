@@ -12,7 +12,7 @@ config_version=5
 
 config/name="Todo"
 run/main_scene="res://text_edit.tscn"
-config/features=PackedStringArray("4.0")
+config/features=PackedStringArray("4.4")
 config/icon="res://icon.png"
 
 [editor_plugins]

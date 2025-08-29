@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bx11sel2q5wli"]
 
-[ext_resource type="Script" path="res://addons/Todo_Manager/Pattern.gd" id="1"]
+[ext_resource type="Script" uid="uid://betg01sk02eyy" path="res://addons/Todo_Manager/Pattern.gd" id="1"]
 
 [node name="Pattern" type="HBoxContainer"]
 script = ExtResource("1")

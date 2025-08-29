@@ -1,8 +1,8 @@
 [gd_scene load_steps=6 format=3 uid="uid://b6k0dtftankcx"]
 
-[ext_resource type="Script" path="res://addons/Todo_Manager/Dock.gd" id="1"]
-[ext_resource type="Script" path="res://addons/Todo_Manager/Project.gd" id="2"]
-[ext_resource type="Script" path="res://addons/Todo_Manager/Current.gd" id="3"]
+[ext_resource type="Script" uid="uid://csgl0vtsudgxh" path="res://addons/Todo_Manager/Dock.gd" id="1"]
+[ext_resource type="Script" uid="uid://bnyawhvwojm5g" path="res://addons/Todo_Manager/Project.gd" id="2"]
+[ext_resource type="Script" uid="uid://dp4hevwsquax6" path="res://addons/Todo_Manager/Current.gd" id="3"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_kqxcu"]
 
@@ -55,12 +55,14 @@ text = "Settings"
 [node name="TabContainer" type="TabContainer" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
+current_tab = 0
 
 [node name="Project" type="Panel" parent="VBoxContainer/TabContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("2")
+metadata/_tab_index = 0
 
 [node name="Tree" type="Tree" parent="VBoxContainer/TabContainer/Project"]
 layout_mode = 1
@@ -77,6 +79,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("3")
+metadata/_tab_index = 1
 
 [node name="Tree" type="Tree" parent="VBoxContainer/TabContainer/Current"]
 layout_mode = 1
@@ -91,6 +94,7 @@ hide_root = true
 [node name="Settings" type="Panel" parent="VBoxContainer/TabContainer"]
 visible = false
 layout_mode = 2
+metadata/_tab_index = 2
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/TabContainer/Settings"]
 layout_mode = 1
