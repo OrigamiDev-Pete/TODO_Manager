@@ -1,5 +1,5 @@
 @tool
-extends Panel
+extends Control
 
 signal tree_built # used for debugging
 
@@ -8,7 +8,7 @@ const Todo := preload("res://addons/Todo_Manager/todo_class.gd")
 var _sort_alphabetical := true
 var _full_path := false
 
-@onready var tree := $Tree as Tree
+@onready var tree := $Panel/Tree as Tree
 
 func build_tree(todo_items : Array, ignore_paths : Array, patterns : Array, cased_patterns: Array[String], sort_alphabetical : bool, full_path : bool) -> void:
 	_full_path = full_path

@@ -10,8 +10,12 @@ const Current := preload("res://addons/Todo_Manager/Current.gd")
 const Todo := preload("res://addons/Todo_Manager/todo_class.gd")
 const TodoItem := preload("res://addons/Todo_Manager/todoItem_class.gd")
 const ColourPicker := preload("res://addons/Todo_Manager/UI/ColourPicker.tscn")
-const Pattern := preload("res://addons/Todo_Manager/UI/Pattern.tscn")
-const DEFAULT_PATTERNS := [["\\bTODO\\b", Color("96f1ad"), CASE_INSENSITIVE], ["\\bHACK\\b", Color("d5bc70"), CASE_INSENSITIVE], ["\\bFIXME\\b", Color("d57070"), CASE_INSENSITIVE]]
+const PatternEdit := preload("res://addons/Todo_Manager/PatternEdit.gd")
+const PatternEditScene := preload("res://addons/Todo_Manager/UI/PatternEdit.tscn")
+const ToggleButton := preload("res://addons/Todo_Manager/UI/ToggleButton.tscn")
+
+# Pattern array format - [regex, colour, case_sensitivity, enabled]
+const DEFAULT_PATTERNS := [["\\bTODO\\b", Color("96f1ad"), CASE_INSENSITIVE, true], ["\\bHACK\\b", Color("d5bc70"), CASE_INSENSITIVE, true], ["\\bFIXME\\b", Color("d57070"), CASE_INSENSITIVE, true]]
 const DEFAULT_SCRIPT_COLOUR := Color("ccced3")
 const DEFAULT_SCRIPT_NAME := false
 const DEFAULT_SORT := true
@@ -27,14 +31,15 @@ var auto_refresh := true
 var builtin_enabled := false
 var _sort_alphabetical := true
 
-var patterns := [["\\bTODO\\b", Color("96f1ad"), CASE_INSENSITIVE], ["\\bHACK\\b", Color("d5bc70"), CASE_INSENSITIVE], ["\\bFIXME\\b", Color("d57070"), CASE_INSENSITIVE]]
-
+var patterns := [["\\bTODO\\b", Color("96f1ad"), CASE_INSENSITIVE, true], ["\\bHACK\\b", Color("d5bc70"), CASE_INSENSITIVE, true], ["\\bFIXME\\b", Color("d57070"), CASE_INSENSITIVE, true]]
 
 @onready var tabs := $VBoxContainer/TabContainer as TabContainer
 @onready var project := $VBoxContainer/TabContainer/Project as Project
 @onready var current := $VBoxContainer/TabContainer/Current as Current
-@onready var project_tree := $VBoxContainer/TabContainer/Project/Tree as Tree
-@onready var current_tree := $VBoxContainer/TabContainer/Current/Tree as Tree
+@onready var project_tree := $VBoxContainer/TabContainer/Project/Panel/Tree as Tree
+@onready var project_toggles_container := $VBoxContainer/TabContainer/Project/TogglesScrollContainer/VBoxContainer as VBoxContainer
+@onready var current_tree := $VBoxContainer/TabContainer/Current/Panel/Tree as Tree
+@onready var current_toggles_container := $VBoxContainer/TabContainer/Current/TogglesScrollContainer/VBoxContainer as VBoxContainer
 @onready var settings_panel := $VBoxContainer/TabContainer/Settings as Panel
 @onready var colours_container := $VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/Colours as VBoxContainer
 @onready var pattern_container := $VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4/Patterns as VBoxContainer
@@ -48,12 +53,14 @@ func _ready() -> void:
 
 func build_tree() -> void:
 	if tabs:
+		add_toggle_buttons()
+		var filtered_patterns = patterns.filter(func (p): return p[3] == true)
 		match tabs.current_tab:
 			0:
-				project.build_tree(todo_items, ignore_paths, patterns, plugin.cased_patterns, _sort_alphabetical, full_path)
+				project.build_tree(todo_items, ignore_paths, filtered_patterns, plugin.cased_patterns, _sort_alphabetical, full_path)
 				create_config_file()
 			1:
-				current.build_tree(get_active_script(), patterns, plugin.cased_patterns)
+				current.build_tree(get_active_script(), filtered_patterns, plugin.cased_patterns)
 				create_config_file()
 			2:
 				pass
@@ -88,6 +95,7 @@ func go_to_script(script_path: String, line_number : int = 0) -> void:
 		plugin.get_editor_interface().edit_resource(script)
 		plugin.get_editor_interface().get_script_editor().goto_line(line_number - 1)
 
+
 func get_exec_flags(editor_path : String, script_path : String, line_number : int) -> PackedStringArray:
 	var args : PackedStringArray
 	var script_global_path = ProjectSettings.globalize_path(script_path)
@@ -107,11 +115,13 @@ func get_exec_flags(editor_path : String, script_path : String, line_number : in
 	
 	return args
 
+
 func sort_alphabetical(a, b) -> bool:
 	if a.script_path > b.script_path:
 		return true
 	else:
 		return false
+
 
 func sort_backwards(a, b) -> bool:
 	if a.script_path < b.script_path:
@@ -123,7 +133,7 @@ func sort_backwards(a, b) -> bool:
 func populate_settings() -> void:
 	for i in patterns.size():
 		## Create Colour Pickers
-		var colour_picker: Variant = ColourPicker.instantiate()
+		var colour_picker: Node = ColourPicker.instantiate()
 		colour_picker.colour = patterns[i][1]
 		colour_picker.title = patterns[i][0]
 		colour_picker.index = i
@@ -131,7 +141,7 @@ func populate_settings() -> void:
 		colour_picker.colour_picker.color_changed.connect(change_colour.bind(i))
 		
 		## Create Patterns
-		var pattern_edit: Variant = Pattern.instantiate()
+		var pattern_edit: PatternEdit = PatternEditScene.instantiate()
 		pattern_edit.text = patterns[i][0]
 		pattern_edit.index = i
 		pattern_container.add_child(pattern_edit)
@@ -168,9 +178,25 @@ func rebuild_settings() -> void:
 	populate_settings()
 
 
+func add_toggle_buttons() -> void:
+	for toggle in project_toggles_container.get_children():
+		toggle.queue_free()
+	for toggle in current_toggles_container.get_children():
+		toggle.queue_free()
+	for pattern in patterns:
+		var toggle : Button = ToggleButton.instantiate()
+		toggle.text = pattern[0].replace('\\b', '')
+		toggle.button_pressed = pattern[3]
+		toggle.connect("toggled", toggle_pattern_enabled.bind(pattern))
+		if tabs.current_tab == 0:
+			project_toggles_container.add_child(toggle)
+		elif tabs.current_tab == 1:
+			current_toggles_container.add_child(toggle)
+
 #### CONFIG FILE ####
 func create_config_file() -> void:
 	var config = ConfigFile.new()
+	
 	config.set_value("scripts", "full_path", full_path)
 	config.set_value("scripts", "sort_alphabetical", _sort_alphabetical)
 	config.set_value("scripts", "script_colour", script_colour)
@@ -192,10 +218,19 @@ func load_config() -> void:
 		script_colour = config.get_value("scripts", "script_colour", DEFAULT_SCRIPT_COLOUR)
 		ignore_paths = config.get_value("scripts", "ignore_paths", [] as Array[String])
 		patterns = config.get_value("patterns", "patterns", DEFAULT_PATTERNS)
+		fix_missing_values(patterns)
 		auto_refresh = config.get_value("config", "auto_refresh", true)
 		builtin_enabled = config.get_value("config", "builtin_enabled", false)
 	else:
 		create_config_file()
+
+
+func fix_missing_values(patterns: Array) -> void:
+	for pattern in patterns:
+		if pattern.size() == 2:
+			pattern.append(CASE_INSENSITIVE)
+		if pattern.size() == 3:
+			pattern.append(true)
 
 
 #### Events ####
@@ -244,6 +279,10 @@ func remove_pattern(index: int, this: Node, this_colour: Node) -> void:
 	this_colour.queue_free()
 	plugin.rescan_files(true)
 
+func toggle_pattern_enabled(active: bool, pattern: Array) -> void:
+	pattern[3] = active
+	plugin.rescan_files(true)
+
 func case_sensitive_pattern(active: bool, index: int) -> void:
 	if active:
 		patterns[index][2] = CASE_SENSITIVE
@@ -264,7 +303,7 @@ func _on_AlphSortCheckBox_toggled(button_pressed: bool) -> void:
 	plugin.rescan_files(true)
 
 func _on_AddPatternButton_pressed() -> void:
-	patterns.append(["\\bplaceholder\\b", Color.WHITE, CASE_INSENSITIVE])
+	patterns.append(["\\bplaceholder\\b", Color.WHITE, CASE_INSENSITIVE, true])
 	rebuild_settings()
 
 func _on_RefreshCheckButton_toggled(button_pressed: bool) -> void:

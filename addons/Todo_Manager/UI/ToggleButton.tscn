@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3 uid="uid://bq0tjjng7hdvt"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5887s"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rtgj1"]
+bg_color = Color(1, 1, 1, 0.0705882)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5887s"]
+bg_color = Color(0.12549, 0.156863, 0.192157, 1)
+border_width_bottom = 2
+border_color = Color(0.439216, 0.729412, 0.980392, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_f41nr"]
+
+[node name="Button" type="Button"]
+theme_override_styles/focus = SubResource("StyleBoxEmpty_5887s")
+theme_override_styles/hover = SubResource("StyleBoxFlat_rtgj1")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_5887s")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_f41nr")
+toggle_mode = true
+text = "TODO"

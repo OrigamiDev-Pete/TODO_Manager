@@ -1,7 +1,6 @@
 @tool
 extends RefCounted
 
-
 var pattern : String
 var title : String
 var content : String

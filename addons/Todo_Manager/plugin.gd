@@ -33,9 +33,11 @@ func _enter_tree() -> void:
 	get_editor_interface().get_script_editor().connect("editor_script_changed",
 			_on_active_script_changed)
 	_dockUI.plugin = self
-
-	combined_pattern = combine_patterns(_dockUI.patterns)
-	find_tokens_from_path(find_scripts())
+	
+	var filtered_patterns = _dockUI.patterns.filter(func (p): return p[3] == true)
+	if filtered_patterns.size() > 0:
+		combined_pattern = combine_patterns(filtered_patterns)
+		find_tokens_from_path(find_scripts())
 	_dockUI.build_tree()
 
 
@@ -217,7 +219,6 @@ func get_dir_contents(dir: DirAccess, scripts: Array[String], directory_queue: A
 		return
 	dir.list_dir_begin()
 	var file_name : String = dir.get_next()
-
 	
 	while file_name != "":
 		if dir.current_is_dir():
@@ -241,8 +242,11 @@ func rescan_files(clear_cache: bool) -> void:
 	_dockUI.todo_items.clear()
 	if clear_cache:
 		todo_cache.clear()
-	combined_pattern = combine_patterns(_dockUI.patterns)
-	find_tokens_from_path(find_scripts())
+	var filtered_patterns = _dockUI.patterns.filter(func (p): return p[3] == true)
+
+	if filtered_patterns.size() > 0:
+		combined_pattern = combine_patterns(filtered_patterns)
+		find_tokens_from_path(find_scripts())
 	_dockUI.build_tree()
 
 
@@ -255,17 +259,15 @@ func combine_patterns(patterns: Array) -> String:
 		else: 
 			cased_patterns.append("(" + pattern[0] + ")")
 	
-	if patterns.size() == 1:
-		return cased_patterns[0]
-	else:
-		var pattern_string := "((\\/\\*)|(#|\\/\\/))\\s*("
-		for i in range(patterns.size()):
-			if i == 0:
-				pattern_string += cased_patterns[i]
-			else:
-				pattern_string += "|" + cased_patterns[i]
-		pattern_string += ")(?(2)[\\s\\S]*?\\*\\/|.*)"
-		return pattern_string
+
+	var pattern_string := "((\\/\\*)|(#|\\/\\/))\\s*("
+	for i in range(patterns.size()):
+		if i == 0:
+			pattern_string += cased_patterns[i]
+		else:
+			pattern_string += "|" + cased_patterns[i]
+	pattern_string += ")(?(2)[\\s\\S]*?\\*\\/|.*)"
+	return pattern_string
 
 
 func create_todo(todo_string: String, script_path: String) -> Todo:

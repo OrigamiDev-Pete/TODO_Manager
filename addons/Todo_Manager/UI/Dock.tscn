@@ -57,14 +57,23 @@ layout_mode = 2
 size_flags_vertical = 3
 current_tab = 0
 
-[node name="Project" type="Panel" parent="VBoxContainer/TabContainer"]
+[node name="Project" type="Control" parent="VBoxContainer/TabContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("2")
 metadata/_tab_index = 0
 
-[node name="Tree" type="Tree" parent="VBoxContainer/TabContainer/Project"]
+[node name="Panel" type="Panel" parent="VBoxContainer/TabContainer/Project"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -106.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Tree" type="Tree" parent="VBoxContainer/TabContainer/Project/Panel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -73,7 +82,22 @@ grow_horizontal = 2
 grow_vertical = 2
 hide_root = true
 
-[node name="Current" type="Panel" parent="VBoxContainer/TabContainer"]
+[node name="TogglesScrollContainer" type="ScrollContainer" parent="VBoxContainer/TabContainer/Project"]
+layout_mode = 1
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -102.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/TabContainer/Project/TogglesScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="Current" type="Control" parent="VBoxContainer/TabContainer"]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
@@ -81,7 +105,14 @@ size_flags_vertical = 3
 script = ExtResource("3")
 metadata/_tab_index = 1
 
-[node name="Tree" type="Tree" parent="VBoxContainer/TabContainer/Current"]
+[node name="Panel" type="Panel" parent="VBoxContainer/TabContainer/Current"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -106.0
+
+[node name="Tree" type="Tree" parent="VBoxContainer/TabContainer/Current/Panel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -90,6 +121,21 @@ grow_horizontal = 2
 grow_vertical = 2
 hide_folding = true
 hide_root = true
+
+[node name="TogglesScrollContainer" type="ScrollContainer" parent="VBoxContainer/TabContainer/Current"]
+layout_mode = 1
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -102.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/TabContainer/Current/TogglesScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
 
 [node name="Settings" type="Panel" parent="VBoxContainer/TabContainer"]
 visible = false
@@ -306,8 +352,8 @@ flat = true
 
 [connection signal="toggled" from="VBoxContainer/Header/HeaderRight/SettingsButton" to="." method="_on_SettingsButton_toggled"]
 [connection signal="tab_changed" from="VBoxContainer/TabContainer" to="." method="_on_TabContainer_tab_changed"]
-[connection signal="item_activated" from="VBoxContainer/TabContainer/Project/Tree" to="." method="_on_Tree_item_activated"]
-[connection signal="item_activated" from="VBoxContainer/TabContainer/Current/Tree" to="." method="_on_Tree_item_activated"]
+[connection signal="item_activated" from="VBoxContainer/TabContainer/Project/Panel/Tree" to="." method="_on_Tree_item_activated"]
+[connection signal="item_activated" from="VBoxContainer/TabContainer/Current/Panel/Tree" to="." method="_on_Tree_item_activated"]
 [connection signal="toggled" from="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/ScriptName/FullPathCheckBox" to="." method="_on_FullPathCheckBox_toggled"]
 [connection signal="toggled" from="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/ScriptSort/AlphSortCheckBox" to="." method="_on_AlphSortCheckBox_toggled"]
 [connection signal="color_changed" from="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/ScriptColour/ScriptColourPickerButton" to="." method="_on_ScriptColourPickerButton_color_changed"]

@@ -1,9 +1,9 @@
 [gd_scene load_steps=2 format=3 uid="uid://bx11sel2q5wli"]
 
-[ext_resource type="Script" uid="uid://betg01sk02eyy" path="res://addons/Todo_Manager/Pattern.gd" id="1"]
+[ext_resource type="Script" uid="uid://betg01sk02eyy" path="res://addons/Todo_Manager/PatternEdit.gd" id="1_mujq6"]
 
 [node name="Pattern" type="HBoxContainer"]
-script = ExtResource("1")
+script = ExtResource("1_mujq6")
 
 [node name="LineEdit" type="LineEdit" parent="."]
 layout_mode = 2
