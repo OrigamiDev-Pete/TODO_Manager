@@ -52,7 +52,6 @@ func queue_remove(file: String):
 		if _dockUI.todo_items[i].script_path == file:
 			_dockUI.todo_items.remove_at(i)
 
-
 func find_tokens_from_path(scripts: Array[String]) -> void:
 	for script_path in scripts:
 		var file := FileAccess.open(script_path, FileAccess.READ)
@@ -247,6 +246,8 @@ func rescan_files(clear_cache: bool) -> void:
 	if filtered_patterns.size() > 0:
 		combined_pattern = combine_patterns(filtered_patterns)
 		find_tokens_from_path(find_scripts())
+	
+	count_todos()
 	_dockUI.build_tree()
 
 
@@ -287,6 +288,12 @@ func create_todo(todo_string: String, script_path: String) -> Todo:
 	todo.content = todo_string
 	todo.script_path = script_path
 	return todo
+
+func count_todos() -> void:
+	var count:int = 0
+	for i in _dockUI.todo_items.size():
+		count += _dockUI.todo_items[i].todos.size()
+	_dockUI.get_parent().title = "Todo (%01d)" % [count]
 
 
 func _on_active_script_changed(script) -> void:
