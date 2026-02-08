@@ -26,7 +26,7 @@ var refresh_lock := false # makes sure _on_filesystem_changed only triggers once
 
 func _enter_tree() -> void:
 	_dockUI = DockScene.instantiate() as Control
-	add_control_to_bottom_panel(_dockUI, "TODO")
+	add_control_to_bottom_panel(_dockUI, "Todo")
 	get_editor_interface().get_resource_filesystem().connect("filesystem_changed", 
 			_on_filesystem_changed)
 	get_editor_interface().get_file_system_dock().connect("file_removed", queue_remove)
