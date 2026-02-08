@@ -293,7 +293,7 @@ func count_todos() -> void:
 	var count:int = 0
 	for i in _dockUI.todo_items.size():
 		count += _dockUI.todo_items[i].todos.size()
-	_dockUI.get_parent().title = "TODO (%01d)" % [count]
+	_dockUI.get_parent().title = "Todo (%01d)" % [count]
 
 
 func _on_active_script_changed(script) -> void:
