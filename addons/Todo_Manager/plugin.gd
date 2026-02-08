@@ -26,7 +26,7 @@ var refresh_lock := false # makes sure _on_filesystem_changed only triggers once
 
 func _enter_tree() -> void:
 	_dockUI = DockScene.instantiate() as Control
-	add_control_to_bottom_panel(_dockUI, "Todo")
+	add_control_to_bottom_panel(_dockUI, "TODO")
 	get_editor_interface().get_resource_filesystem().connect("filesystem_changed", 
 			_on_filesystem_changed)
 	get_editor_interface().get_file_system_dock().connect("file_removed", queue_remove)
@@ -51,7 +51,6 @@ func queue_remove(file: String):
 	for i in _dockUI.todo_items.size() - 1:
 		if _dockUI.todo_items[i].script_path == file:
 			_dockUI.todo_items.remove_at(i)
-
 
 func find_tokens_from_path(scripts: Array[String]) -> void:
 	for script_path in scripts:
@@ -247,6 +246,8 @@ func rescan_files(clear_cache: bool) -> void:
 	if filtered_patterns.size() > 0:
 		combined_pattern = combine_patterns(filtered_patterns)
 		find_tokens_from_path(find_scripts())
+	
+	count_todos()
 	_dockUI.build_tree()
 
 
@@ -287,6 +288,12 @@ func create_todo(todo_string: String, script_path: String) -> Todo:
 	todo.content = todo_string
 	todo.script_path = script_path
 	return todo
+
+func count_todos() -> void:
+	var count:int = 0
+	for i in _dockUI.todo_items.size():
+		count += _dockUI.todo_items[i].todos.size()
+	_dockUI.get_parent().title = "TODO (%01d)" % [count]
 
 
 func _on_active_script_changed(script) -> void:
