@@ -38,6 +38,7 @@ func _enter_tree() -> void:
 	if filtered_patterns.size() > 0:
 		combined_pattern = combine_patterns(filtered_patterns)
 		find_tokens_from_path(find_scripts())
+	count_todos()
 	_dockUI.build_tree()
 
 
@@ -290,10 +291,13 @@ func create_todo(todo_string: String, script_path: String) -> Todo:
 	return todo
 
 func count_todos() -> void:
-	var count:int = 0
-	for i in _dockUI.todo_items.size():
-		count += _dockUI.todo_items[i].todos.size()
-	_dockUI.get_parent().title = "Todo (%01d)" % [count]
+	if _dockUI.show_count:
+		var count : int = 0
+		for i in _dockUI.todo_items.size():
+			count += _dockUI.todo_items[i].todos.size()
+		_dockUI.get_parent().title = "Todo (%01d)" % [count]
+	else:
+		_dockUI.get_parent().title = "Todo"
 
 
 func _on_active_script_changed(script) -> void:

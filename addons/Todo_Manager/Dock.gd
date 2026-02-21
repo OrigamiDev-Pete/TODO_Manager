@@ -29,6 +29,7 @@ var ignore_paths : Array[String] = []
 var full_path := false
 var auto_refresh := true
 var builtin_enabled := false
+var show_count := true
 var _sort_alphabetical := true
 
 var patterns := [["\\bTODO\\b", Color("96f1ad"), CASE_INSENSITIVE, true], ["\\bHACK\\b", Color("d5bc70"), CASE_INSENSITIVE, true], ["\\bFIXME\\b", Color("d57070"), CASE_INSENSITIVE, true]]
@@ -45,6 +46,7 @@ var patterns := [["\\bTODO\\b", Color("96f1ad"), CASE_INSENSITIVE, true], ["\\bH
 @onready var pattern_container := $VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4/Patterns as VBoxContainer
 @onready var ignore_textbox := $VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/IgnorePaths/TextEdit as LineEdit
 @onready var auto_refresh_button := $VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer5/Patterns/RefreshCheckButton as CheckButton
+@onready var show_count_button := $VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer5/Patterns/ShowCountButton as CheckButton
 
 func _ready() -> void:
 	load_config()
@@ -166,6 +168,7 @@ func populate_settings() -> void:
 	ignore_paths_field.text = ignore_paths_text
 	
 	auto_refresh_button.button_pressed = auto_refresh
+	show_count_button.button_pressed = show_count
 
 
 func rebuild_settings() -> void:
@@ -205,6 +208,7 @@ func create_config_file() -> void:
 	config.set_value("patterns", "patterns", patterns)
 	
 	config.set_value("config", "auto_refresh", auto_refresh)
+	config.set_value("config", "show_count", show_count)
 	config.set_value("config", "builtin_enabled", builtin_enabled)
 	
 	var err = config.save("res://addons/Todo_Manager/todo.cfg")
@@ -220,6 +224,7 @@ func load_config() -> void:
 		patterns = config.get_value("patterns", "patterns", DEFAULT_PATTERNS)
 		fix_missing_values(patterns)
 		auto_refresh = config.get_value("config", "auto_refresh", true)
+		show_count = config.get_value("config", "show_count", true)
 		builtin_enabled = config.get_value("config", "builtin_enabled", false)
 	else:
 		create_config_file()
@@ -334,3 +339,8 @@ func _on_TabContainer_tab_changed(tab: int) -> void:
 func _on_BuiltInCheckButton_toggled(button_pressed: bool) -> void:
 	builtin_enabled = button_pressed
 	plugin.rescan_files(true)
+
+func _on_show_count_button_toggled(button_pressed: bool) -> void:
+	show_count = button_pressed
+	if plugin:
+		plugin.rescan_files(false)
