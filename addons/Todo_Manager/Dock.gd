@@ -47,6 +47,7 @@ var patterns := [["\\bTODO\\b", Color("96f1ad"), CASE_INSENSITIVE, true], ["\\bH
 @onready var ignore_textbox := $VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/IgnorePaths/TextEdit as LineEdit
 @onready var auto_refresh_button := $VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer5/Patterns/RefreshCheckButton as CheckButton
 @onready var show_count_button := $VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer5/Patterns/ShowCountButton as CheckButton
+@onready var scan_builtin_scripts_button := $VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer5/Patterns/HBoxContainer/BuiltInCheckButton as CheckButton
 
 func _ready() -> void:
 	load_config()
@@ -169,6 +170,8 @@ func populate_settings() -> void:
 	
 	auto_refresh_button.button_pressed = auto_refresh
 	show_count_button.button_pressed = show_count
+	scan_builtin_scripts_button.button_pressed = builtin_enabled
+	
 
 
 func rebuild_settings() -> void:
@@ -338,7 +341,8 @@ func _on_TabContainer_tab_changed(tab: int) -> void:
 
 func _on_BuiltInCheckButton_toggled(button_pressed: bool) -> void:
 	builtin_enabled = button_pressed
-	plugin.rescan_files(true)
+	if plugin:
+		plugin.rescan_files(true)
 
 func _on_show_count_button_toggled(button_pressed: bool) -> void:
 	show_count = button_pressed
