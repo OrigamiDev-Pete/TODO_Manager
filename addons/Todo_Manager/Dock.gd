@@ -101,7 +101,7 @@ func go_to_script(script_path: String, line_number : int = 0) -> void:
 	if plugin.get_editor_interface().get_editor_settings().get_setting("text_editor/external/use_external_editor"):
 		var exec_path = plugin.get_editor_interface().get_editor_settings().get_setting("text_editor/external/exec_path")
 		var args := get_exec_flags(exec_path, script_path, line_number)
-		OS.execute(exec_path, args)
+		OS.execute_with_pipe(exec_path, args)
 	else:
 		var script := load(script_path)
 		plugin.get_editor_interface().edit_resource(script)
