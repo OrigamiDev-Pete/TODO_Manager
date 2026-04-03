@@ -3,6 +3,7 @@ extends RefCounted
 
 var script_path : String
 var todos : Array
+var ignored : bool
 
 func _init(script_path: String, todos: Array):
 	self.script_path = script_path

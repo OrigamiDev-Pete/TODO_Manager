@@ -20,14 +20,14 @@ func build_tree(todo_items : Array, ignore_paths : Array, patterns : Array, case
 	var root := tree.create_item()
 	root.set_text(0, "Scripts")
 	for todo_item in todo_items:
-		var ignore := false
-		for ignore_path in ignore_paths:
-			var script_path : String = todo_item.script_path
-			if script_path.begins_with(ignore_path) or script_path.begins_with("res://" + ignore_path) or script_path.begins_with("res:///" + ignore_path):
-				ignore = true
-				break
-		if ignore: 
-			continue
+		#var ignore := false
+		#for ignore_path in ignore_paths:
+			#var script_path : String = todo_item.script_path
+			#if script_path.begins_with(ignore_path) or script_path.begins_with("res://" + ignore_path) or script_path.begins_with("res:///" + ignore_path):
+				#ignore = true
+				#break
+		#if ignore: 
+			#continue
 		var script := tree.create_item(root)
 		if full_path:
 			script.set_text(0, todo_item.script_path + " -------")

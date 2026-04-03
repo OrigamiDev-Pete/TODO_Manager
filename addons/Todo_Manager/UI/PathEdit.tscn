@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://crwwg3jnpajv1"]
+
+[ext_resource type="Script" uid="uid://phqm8fm8s3om" path="res://addons/Todo_Manager/UI/PathEdit.gd" id="1_v1uj4"]
+[ext_resource type="StyleBox" uid="uid://coyt1i52yehl7" path="res://addons/Todo_Manager/UI/PatternContainer.tres" id="1_wkkxb"]
+
+[node name="PathEdit" type="PanelContainer" unique_id=294956074]
+anchors_preset = -1
+anchor_right = 0.094000004
+anchor_bottom = 0.056
+offset_right = -0.288002
+offset_bottom = -0.288002
+theme_override_styles/panel = ExtResource("1_wkkxb")
+script = ExtResource("1_v1uj4")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=779868301]
+layout_mode = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer" unique_id=1941758940]
+layout_mode = 2
+
+[node name="LineEdit" type="LineEdit" parent="MarginContainer/HBoxContainer" unique_id=50492651]
+unique_name_in_owner = true
+layout_mode = 2
+expand_to_text_length = true
+
+[node name="RemoveButton" type="Button" parent="MarginContainer/HBoxContainer" unique_id=632158013]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+flat = true
+icon_alignment = 1
+expand_icon = true

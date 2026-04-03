@@ -38,8 +38,10 @@ func _enter_tree() -> void:
 	if filtered_patterns.size() > 0:
 		combined_pattern = combine_patterns(filtered_patterns)
 		find_tokens_from_path(find_scripts())
+	
 	count_todos()
 	_dockUI.build_tree()
+
 
 
 func _exit_tree() -> void:
@@ -217,6 +219,9 @@ func get_dir_contents(dir: DirAccess, scripts: Array[String], directory_queue: A
 	dir.include_hidden = false
 	if dir_has_gdignore(dir):
 		return
+	for path in _dockUI.ignore_paths:
+		if (path == dir.get_current_dir()):
+			return
 	dir.list_dir_begin()
 	var file_name : String = dir.get_next()
 	
@@ -239,6 +244,7 @@ func dir_has_gdignore(dir: DirAccess) -> bool:
 	return files.has(".gdignore")
 
 func rescan_files(clear_cache: bool) -> void:
+	_dockUI.settings_edited = false
 	_dockUI.todo_items.clear()
 	if clear_cache:
 		todo_cache.clear()
@@ -290,12 +296,16 @@ func create_todo(todo_string: String, script_path: String) -> Todo:
 	todo.script_path = script_path
 	return todo
 
+
 func count_todos() -> void:
 	if _dockUI.show_count:
 		var count : int = 0
 		for i in _dockUI.todo_items.size():
 			count += _dockUI.todo_items[i].todos.size()
-		_dockUI.get_parent().title = "Todo (%01d)" % [count]
+		if (count != 0):
+			_dockUI.get_parent().title = "Todo (%01d)" % [count]
+		else:
+			_dockUI.get_parent().title = "Todo"
 	else:
 		_dockUI.get_parent().title = "Todo"
 

@@ -55,9 +55,10 @@ text = "Settings"
 [node name="TabContainer" type="TabContainer" parent="VBoxContainer" unique_id=2046577195]
 layout_mode = 2
 size_flags_vertical = 3
-current_tab = 0
+current_tab = 2
 
 [node name="Project" type="Control" parent="VBoxContainer/TabContainer" unique_id=254966700]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -140,7 +141,6 @@ size_flags_horizontal = 3
 theme_override_constants/separation = 6
 
 [node name="Settings" type="Panel" parent="VBoxContainer/TabContainer" unique_id=1313770381]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 2
 
@@ -234,23 +234,25 @@ custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 color = Color(0.8, 0.807843, 0.827451, 1)
 
-[node name="IgnorePaths" type="HBoxContainer" parent="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts" unique_id=647019452]
+[node name="IgnorePaths" type="HBoxContainer" parent="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts" unique_id=26139226]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/IgnorePaths" unique_id=248151958]
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/IgnorePaths" unique_id=986087886]
 layout_mode = 2
 text = "Ignore Paths:"
 
-[node name="TextEdit" type="LineEdit" parent="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/IgnorePaths" unique_id=1291256410]
-custom_minimum_size = Vector2(100, 0)
+[node name="HFlowContainer" type="HFlowContainer" parent="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/IgnorePaths" unique_id=1810930902]
 layout_mode = 2
-expand_to_text_length = true
+size_flags_horizontal = 3
 
-[node name="Label3" type="Label" parent="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/IgnorePaths" unique_id=1892156588]
+[node name="AddPathButton" type="Button" parent="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/IgnorePaths/HFlowContainer" unique_id=1666561938]
+custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
-text = "(Separated by commas)"
+icon_alignment = 1
+expand_icon = true
 
 [node name="TODOColours" type="HBoxContainer" parent="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer" unique_id=144915450]
+visible = false
 layout_mode = 2
 
 [node name="Label" type="Label" parent="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/TODOColours" unique_id=12487]
@@ -262,6 +264,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer" unique_id=649485484]
+visible = false
 layout_mode = 2
 
 [node name="VSeparator" type="VSeparator" parent="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3" unique_id=150652455]
@@ -289,7 +292,7 @@ layout_mode = 2
 
 [node name="Patterns" type="VBoxContainer" parent="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4" unique_id=1458626339]
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 0
 
 [node name="AddPatternButton" type="Button" parent="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4/Patterns" unique_id=1480665788]
 layout_mode = 2
@@ -333,6 +336,7 @@ layout_mode = 2
 
 [node name="BuiltInCheckButton" type="CheckButton" parent="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer5/Patterns/HBoxContainer" unique_id=188301185]
 layout_mode = 2
+button_pressed = true
 text = "Scan Built-in Scripts"
 
 [node name="Label" type="Label" parent="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer5/Patterns/HBoxContainer" unique_id=1698620093]
@@ -365,6 +369,7 @@ flat = true
 [connection signal="toggled" from="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/ScriptName/FullPathCheckBox" to="." method="_on_FullPathCheckBox_toggled"]
 [connection signal="toggled" from="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/ScriptSort/AlphSortCheckBox" to="." method="_on_AlphSortCheckBox_toggled"]
 [connection signal="color_changed" from="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/ScriptColour/ScriptColourPickerButton" to="." method="_on_ScriptColourPickerButton_color_changed"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/IgnorePaths/HFlowContainer/AddPathButton" to="." method="_on_add_path_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4/Patterns/AddPatternButton" to="." method="_on_AddPatternButton_pressed"]
 [connection signal="toggled" from="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer5/Patterns/RefreshCheckButton" to="." method="_on_RefreshCheckButton_toggled"]
 [connection signal="toggled" from="VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer5/Patterns/ShowCountButton" to="." method="_on_show_count_button_toggled"]

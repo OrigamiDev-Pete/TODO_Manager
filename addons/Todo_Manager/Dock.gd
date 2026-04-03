@@ -12,6 +12,8 @@ const TodoItem := preload("res://addons/Todo_Manager/todoItem_class.gd")
 const ColourPicker := preload("res://addons/Todo_Manager/UI/ColourPicker.tscn")
 const PatternEdit := preload("res://addons/Todo_Manager/PatternEdit.gd")
 const PatternEditScene := preload("res://addons/Todo_Manager/UI/PatternEdit.tscn")
+const PathEdit := preload("res://addons/Todo_Manager/UI/PathEdit.gd")
+const PathEditScene := preload("res://addons/Todo_Manager/UI/PathEdit.tscn")
 const ToggleButton := preload("res://addons/Todo_Manager/UI/ToggleButton.tscn")
 
 # Pattern array format - [regex, colour, case_sensitivity, enabled]
@@ -26,10 +28,12 @@ var todo_items : Array
 
 var script_colour := Color("ccced3")
 var ignore_paths : Array[String] = []
+var ignore_paths_set : Dictionary # { key: ignore_path, value: true }
 var full_path := false
 var auto_refresh := true
 var builtin_enabled := false
 var show_count := true
+var settings_edited := false
 var _sort_alphabetical := true
 
 var patterns := [["\\bTODO\\b", Color("96f1ad"), CASE_INSENSITIVE, true], ["\\bHACK\\b", Color("d5bc70"), CASE_INSENSITIVE, true], ["\\bFIXME\\b", Color("d57070"), CASE_INSENSITIVE, true]]
@@ -44,12 +48,17 @@ var patterns := [["\\bTODO\\b", Color("96f1ad"), CASE_INSENSITIVE, true], ["\\bH
 @onready var settings_panel := $VBoxContainer/TabContainer/Settings as Panel
 @onready var colours_container := $VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/Colours as VBoxContainer
 @onready var pattern_container := $VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4/Patterns as VBoxContainer
-@onready var ignore_textbox := $VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/IgnorePaths/TextEdit as LineEdit
+@onready var ignore_paths_container := $VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/IgnorePaths/HFlowContainer as HFlowContainer
 @onready var auto_refresh_button := $VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer5/Patterns/RefreshCheckButton as CheckButton
 @onready var show_count_button := $VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer5/Patterns/ShowCountButton as CheckButton
 @onready var scan_builtin_scripts_button := $VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer5/Patterns/HBoxContainer/BuiltInCheckButton as CheckButton
+@onready var add_pattern_button := $VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4/Patterns/AddPatternButton as Button
+@onready var add_path_button := $VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2/Scripts/IgnorePaths/HFlowContainer/AddPathButton as Button
 
 func _ready() -> void:
+	if (Engine.is_editor_hint()):
+		add_pattern_button.icon = EditorInterface.get_base_control().get_theme_icon("Add", "EditorIcons")
+		add_path_button.icon = EditorInterface.get_base_control().get_theme_icon("Add", "EditorIcons")
 	load_config()
 	populate_settings()
 
@@ -135,38 +144,27 @@ func sort_backwards(a, b) -> bool:
 
 func populate_settings() -> void:
 	for i in patterns.size():
-		## Create Colour Pickers
-		var colour_picker: Node = ColourPicker.instantiate()
-		colour_picker.colour = patterns[i][1]
-		colour_picker.title = patterns[i][0]
-		colour_picker.index = i
-		colours_container.add_child(colour_picker)
-		colour_picker.colour_picker.color_changed.connect(change_colour.bind(i))
-		
-		## Create Patterns
 		var pattern_edit: PatternEdit = PatternEditScene.instantiate()
 		pattern_edit.text = patterns[i][0]
 		pattern_edit.index = i
 		pattern_container.add_child(pattern_edit)
-		pattern_edit.line_edit.text_changed.connect(change_pattern.bind(i,
-				colour_picker))
-		pattern_edit.remove_button.pressed.connect(remove_pattern.bind(i,
-				pattern_edit, colour_picker))
+		pattern_edit.line_edit.text_changed.connect(change_pattern.bind(i))
+		pattern_edit.remove_button.pressed.connect(remove_pattern.bind(i, pattern_edit))
 		pattern_edit.case_checkbox.button_pressed = patterns[i][2]
 		pattern_edit.case_checkbox.toggled.connect(case_sensitive_pattern.bind(i))
-		
+		pattern_edit.colour_picker.color = patterns[i][1]
+		pattern_edit.colour_picker.color_changed.connect(change_colour.bind(i))
 	var pattern_button := $VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4/Patterns/AddPatternButton
 	$VBoxContainer/TabContainer/Settings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4/Patterns.move_child(pattern_button, 0)
 	
-	# path filtering
-	var ignore_paths_field := ignore_textbox
-	if not ignore_paths_field.is_connected("text_changed", _on_ignore_paths_changed):
-		ignore_paths_field.connect("text_changed", _on_ignore_paths_changed)
-	var ignore_paths_text := ""
-	for path in ignore_paths:
-		ignore_paths_text += path + ", "
-	ignore_paths_text = ignore_paths_text.trim_suffix(", ")
-	ignore_paths_field.text = ignore_paths_text
+	for i in ignore_paths.size():
+		var path_edit: PathEdit = PathEditScene.instantiate()
+		path_edit.text = ignore_paths[i]
+		path_edit.index = i
+		ignore_paths_container.add_child(path_edit)
+		path_edit.line_edit.text_changed.connect(change_ignore_path.bind(i))
+		path_edit.remove_button.pressed.connect(remove_ignore_path.bind(i, path_edit))
+	ignore_paths_container.move_child(add_path_button, ignore_paths_container.get_child_count())
 	
 	auto_refresh_button.button_pressed = auto_refresh
 	show_count_button.button_pressed = show_count
@@ -178,9 +176,11 @@ func rebuild_settings() -> void:
 	for node in colours_container.get_children():
 		node.queue_free()
 	for node in pattern_container.get_children():
-		if node is Button:
-			continue
-		node.queue_free()
+		if node is not Button:
+			node.queue_free()
+	for node in ignore_paths_container.get_children():
+		if node is not Button:
+			node.queue_free()
 	populate_settings()
 
 
@@ -276,15 +276,13 @@ func _on_RescanButton_pressed() -> void:
 func change_colour(colour: Color, index: int) -> void:
 	patterns[index][1] = colour
 
-func change_pattern(value: String, index: int, this_colour: Node) -> void:
+func change_pattern(value: String, index: int) -> void:
 	patterns[index][0] = value
-	this_colour.title = value
-	plugin.rescan_files(true)
+	settings_edited = true
 
-func remove_pattern(index: int, this: Node, this_colour: Node) -> void:
+func remove_pattern(index: int, this: Node) -> void:
 	patterns.remove_at(index)
 	this.queue_free()
-	this_colour.queue_free()
 	plugin.rescan_files(true)
 
 func toggle_pattern_enabled(active: bool, pattern: Array) -> void:
@@ -296,6 +294,15 @@ func case_sensitive_pattern(active: bool, index: int) -> void:
 		patterns[index][2] = CASE_SENSITIVE
 	else:
 		patterns[index][2] = CASE_INSENSITIVE
+	plugin.rescan_files(true)
+
+func change_ignore_path(value: String, index: int) -> void:
+	ignore_paths[index] = value
+	settings_edited = true
+
+func remove_ignore_path(index: int, this: Node) -> void:
+	ignore_paths.remove_at(index)
+	this.queue_free()
 	plugin.rescan_files(true)
 
 func _on_DefaultButton_pressed() -> void:
@@ -320,24 +327,12 @@ func _on_RefreshCheckButton_toggled(button_pressed: bool) -> void:
 func _on_Timer_timeout() -> void:
 	plugin.refresh_lock = false
 
-func _on_ignore_paths_changed(new_text: String) -> void:
-	var text = ignore_textbox.text
-	var split: Array = text.split(',')
-	ignore_paths.clear()
-	for elem in split:
-		if elem == " " || elem == "": 
-			continue
-		ignore_paths.push_front(elem.lstrip(' ').rstrip(' '))
-	# validate so no empty string slips through (all paths ignored)
-	var i := 0
-	for path in ignore_paths:
-		if (path == "" || path == " "):
-			ignore_paths.remove_at(i)
-		i += 1
-	plugin.rescan_files(true)
-
 func _on_TabContainer_tab_changed(tab: int) -> void:
-	build_tree()
+	print(settings_edited)
+	if (settings_edited):
+		plugin.rescan_files(true)
+	else:
+		build_tree()
 
 func _on_BuiltInCheckButton_toggled(button_pressed: bool) -> void:
 	builtin_enabled = button_pressed
@@ -348,3 +343,8 @@ func _on_show_count_button_toggled(button_pressed: bool) -> void:
 	show_count = button_pressed
 	if plugin:
 		plugin.rescan_files(false)
+
+func _on_add_path_button_pressed() -> void:
+	ignore_paths.append("res://")
+	rebuild_settings()
+	settings_edited = true

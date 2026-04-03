@@ -1,26 +1,55 @@
-[gd_scene load_steps=2 format=3 uid="uid://bx11sel2q5wli"]
+[gd_scene format=3 uid="uid://bx11sel2q5wli"]
 
-[ext_resource type="Script" uid="uid://betg01sk02eyy" path="res://addons/Todo_Manager/PatternEdit.gd" id="1_mujq6"]
+[ext_resource type="Script" uid="uid://betg01sk02eyy" path="res://addons/Todo_Manager/PatternEdit.gd" id="1"]
+[ext_resource type="StyleBox" uid="uid://coyt1i52yehl7" path="res://addons/Todo_Manager/UI/PatternContainer.tres" id="1_u1ddt"]
 
-[node name="Pattern" type="HBoxContainer"]
-script = ExtResource("1_mujq6")
+[node name="Pattern" type="PanelContainer" unique_id=597758889]
+offset_right = 304.0
+offset_bottom = 32.0
+theme_override_styles/panel = ExtResource("1_u1ddt")
+script = ExtResource("1")
+metadata/_edit_use_anchors_ = true
 
-[node name="LineEdit" type="LineEdit" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=53106569]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer" unique_id=619597695]
+layout_mode = 2
+
+[node name="LineEdit" type="LineEdit" parent="MarginContainer/HBoxContainer" unique_id=1847107617]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
 expand_to_text_length = true
 
-[node name="RemoveButton" type="Button" parent="."]
-layout_mode = 2
-text = "-"
-
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="MarginContainer" type="Control" parent="MarginContainer/HBoxContainer" unique_id=705890986]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
-size_flags_horizontal = 0
+size_flags_horizontal = 3
 
-[node name="CaseSensativeCheckbox" type="CheckBox" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=1659658139]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="CaseSensativeCheckbox" type="CheckBox" parent="MarginContainer/HBoxContainer/HBoxContainer" unique_id=510738760]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
 text = "Case Sensitive"
+
+[node name="ColorPickerButton" type="ColorPickerButton" parent="MarginContainer/HBoxContainer/HBoxContainer" unique_id=1799029787]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(48, 32)
+layout_mode = 2
+
+[node name="RemoveButton" type="Button" parent="MarginContainer/HBoxContainer/HBoxContainer" unique_id=242995874]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+flat = true
+icon_alignment = 1
+expand_icon = true
