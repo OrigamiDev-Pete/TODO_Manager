@@ -33,6 +33,7 @@ func build_tree(todo_items : Array, ignore_paths : Array, patterns : Array, case
 			script.set_text(0, todo_item.script_path + " -------")
 		else:
 			script.set_text(0, todo_item.get_short_path() + " -------")
+		script.set_tooltip_text(0, todo_item.script_path)
 		script.set_metadata(0, todo_item)
 		for todo in todo_item.todos:
 			var item := tree.create_item(script)
