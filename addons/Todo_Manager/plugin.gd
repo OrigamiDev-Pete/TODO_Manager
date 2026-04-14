@@ -7,6 +7,7 @@ const Todo := preload("res://addons/Todo_Manager/todo_class.gd")
 const TodoItem := preload("res://addons/Todo_Manager/todoItem_class.gd")
 
 var _dockUI : Dock
+var _editor_dock : EditorDock
 
 class TodoCacheValue:
 	var todos: Array
@@ -26,7 +27,13 @@ var refresh_lock := false # makes sure _on_filesystem_changed only triggers once
 
 func _enter_tree() -> void:
 	_dockUI = DockScene.instantiate() as Control
-	add_control_to_bottom_panel(_dockUI, "Todo")
+
+	_editor_dock = EditorDock.new()
+	_editor_dock.title = "Todo"
+	_editor_dock.default_slot = EditorDock.DOCK_SLOT_BOTTOM
+	_editor_dock.add_child(_dockUI)
+	add_dock(_editor_dock)
+
 	get_editor_interface().get_resource_filesystem().connect("filesystem_changed", 
 			_on_filesystem_changed)
 	get_editor_interface().get_file_system_dock().connect("file_removed", queue_remove)
@@ -46,8 +53,11 @@ func _enter_tree() -> void:
 
 func _exit_tree() -> void:
 	_dockUI.create_config_file()
-	remove_control_from_bottom_panel(_dockUI)
-	_dockUI.free()
+	remove_dock(_editor_dock)
+	_editor_dock.queue_free()
+
+	_editor_dock = null
+	_dockUI = null
 
 
 func queue_remove(file: String):
