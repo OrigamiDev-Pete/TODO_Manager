@@ -328,7 +328,6 @@ func _on_Timer_timeout() -> void:
 	plugin.refresh_lock = false
 
 func _on_TabContainer_tab_changed(tab: int) -> void:
-	print(settings_edited)
 	if (settings_edited):
 		plugin.rescan_files(true)
 	else:
